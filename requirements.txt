@@ -1,0 +1,11 @@
+Django==1.9.2
+djangorestframework
+markdown
+psycopg2
+pyyaml
+pytz
+mixer
+pycrypto
+celery
+django-celery
+flower
