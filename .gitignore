@@ -42,10 +42,10 @@ ehthumbs.db
 Thumbs.db
 
 databases/*
+#/**/migrations/
 /**/.idea/
 .vagrant/
 /**/.sass-cache/
-/**/migrations/
 *.pyo
 *~
 *.pid
