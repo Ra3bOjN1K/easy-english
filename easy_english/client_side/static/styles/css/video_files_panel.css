@@ -1,0 +1,76 @@
+.video-files-block {
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  display: -ms-flexbox;
+  -ms-flex-direction: column;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  padding-top: 24px;
+  z-index: 3;
+}
+.video-files-block .files-block-btn {
+  -moz-box-shadow: 0.5px 0.5px 4px 0.1px #ccc;
+  -webkit-box-shadow: 0.5px 0.5px 4px 0.1px #ccc;
+  box-shadow: 0.5px 0.5px 4px 0.1px #ccc;
+  border-radius: 1px;
+  color: #333;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+}
+.video-files-block .open-video-button {
+  background: rgba(242, 194, 72, 0.6);
+  border: 1px solid #aaa;
+  margin: 0 0 24px 0;
+}
+.video-files-block .open-subtitles-button {
+  background: rgba(144, 181, 237, 0.6);
+  border: 1px solid #aaa;
+}
+.video-files-block .subtitle-settings-block {
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  display: -ms-flexbox;
+  -ms-flex-direction: row;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  margin: 0 0 24px 0;
+}
+.video-files-block .sub-delay {
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  display: -ms-flexbox;
+  -ms-flex-direction: row;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  -webkit-align-items: center;
+  align-items: center;
+}
+.video-files-block .sub-delay span {
+  color: #666;
+  font-size: 13pt;
+}
+.video-files-block .sub-delay input {
+  color: #666;
+  font-size: 12pt;
+  height: 24px;
+  margin-left: 6px;
+  padding-left: 2px;
+  width: 68px;
+}

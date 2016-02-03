@@ -1,0 +1,45 @@
+<div ng-controller="VideoFilesManageCtrl" class="slide-panel-wrapper">
+    <hr>
+    <a class="control-panel-button files-btn" href="" ng-click="panel.open()"><i class="fa fa-folder-open"></i></a>
+    <hr>
+    <div pageslide ps-open="panel.isOpened" class="left-slide-panel" ps-side="left" ps-speed=".15"
+         ps-cloak="true" ps-size="390px">
+        <a class="slide-panel__close-button" href="" ng-click="panel.close()"><i class="fa fa-times"></i></a>
+
+        <div class="slide-panel-data-container">
+            <div class="video-files-block">
+                <a class="files-block-btn open-video-button" href="" ng-click="panel.onBtnChangeVideoFileClick()">
+                    <i class="fa fa-film"></i> Открыть видео</a>
+
+                <div class="subtitle-settings-block">
+                    <a class="files-block-btn open-subtitles-button" href=""
+                       ng-click="panel.onBtnChangeEngSubtitlesClick()">
+                        <i class="fa fa-commenting-o en"></i> Добавить субтитры (En)</a>
+                    <div class="sub-delay">
+                        <span>Задержка:</span>
+                        <input type="number" step="0.0001" title="Задержка" ng-model="panel.engSubDelay" min="0.001"
+                               ng-change="panel.onEngSubtitlesChangeDelay()">
+                    </div>
+                </div>
+
+                <div class="subtitle-settings-block">
+                    <a class="files-block-btn open-subtitles-button" href=""
+                       ng-click="panel.onBtnChangeRusSubtitlesClick()">
+                        <i class="fa fa-commenting-o ru"></i> Добавить субтитры (Ru)</a>
+                    <div class="sub-delay">
+                        <span>Задержка:</span>
+                        <input type="number" step="0.0001" title="Задержка" ng-model="panel.rusSubDelay" min="0.001"
+                               ng-change="panel.onRusSubtitlesChangeDelay()">
+                    </div>
+                </div>
+
+                <input type="file" id="add-file" class="hidden"
+                       onchange="angular.element(this).scope().onCloseVideoFileDialog()">
+                <input type="file" id="add-en-sub" class="hidden"
+                       onchange="angular.element(this).scope().onCloseEngSubtitlesDialog()">
+                <input type="file" id="add-ru-sub" class="hidden"
+                       onchange="angular.element(this).scope().onCloseRusSubtitlesDialog()">
+            </div>
+        </div>
+    </div>
+</div>

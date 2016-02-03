@@ -1,0 +1,57 @@
+@import 'settings';
+
+.slide-panel-wrapper .control-panel-button.files-btn {
+  //background: #edda95;
+}
+
+.video-files-block {
+  @include init-flex-position(column);
+  padding-top: 24px;
+  z-index: 3;
+
+  .files-block-btn {
+    @include single-box-shadow(.5px, .5px, 4px, .1px, #ccc);
+    border-radius: 1px;
+    color: #333;
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .open-video-button {
+    background: rgba(242, 194, 72, .6);
+    border: 1px solid #aaa;
+    margin: 0 0 24px 0;
+  }
+
+  .open-subtitles-button {
+    background: rgba(144, 181, 237, .6);
+    border: 1px solid #aaa;
+  }
+
+  .subtitle-settings-block {
+    @include init-flex-position(row);
+    @include justify-content(space-between);
+    @include align-items(center);
+    margin: 0 0 24px 0;
+  }
+
+  .sub-delay {
+    @include init-flex-position(row);
+    @include align-items(center);
+
+    span {
+      color: #666;
+      font-size: 13pt;
+    }
+
+    input {
+      color: #666;
+      font-size: 12pt;
+      height: 24px;
+      margin-left: 6px;
+      padding-left: 2px;
+      width: 68px;
+    }
+  }
+}

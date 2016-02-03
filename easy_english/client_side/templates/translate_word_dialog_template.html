@@ -1,0 +1,16 @@
+<div class="translated-word-content" ng-controller="TranslateWordDialogCtrl">
+    <div class="orig-word-block">
+        <span class="orig-word">{{vm.model.word}}</span>
+        <span class="transcription" ng-show="!!vm.model.transcription">{{vm.model.transcription}}</span>
+    </div>
+    <div class="translated-word-block">
+        <div class="translate-waiting" ng-if="!vm.isWordTranslated">
+            <img src="/static/styles/img/loading_clock.gif">
+        </div>
+        <div class="translated-word-item" ng-repeat="translate in vm.model.translations" ng-if="vm.isWordTranslated">
+            <div class="translated-word">{{translate.word}}</div>
+            <span class="word-rate" word-votes-handler>{{translate.votes}}</span>
+            <a class="save-btn"><img src="/static/styles/img/add.png"></a>
+        </div>
+    </div>
+</div>
