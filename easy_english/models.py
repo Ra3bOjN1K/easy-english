@@ -5,9 +5,9 @@ from easy_english.services.translator.base import Lang, StructTypes
 class ForeignWord(models.Model):
     title = models.CharField(max_length=240)
     type = models.SmallIntegerField(choices=StructTypes.choices(),
-                                    default=StructTypes.unknown)
+                                    default=StructTypes.unknown.name)
     language = models.SmallIntegerField(choices=Lang.choices(),
-                                        default=Lang.english)
+                                        default=Lang.english.name)
     transcription = models.CharField(max_length=240, default='')
     created = models.DateTimeField(auto_now_add=True)
 
