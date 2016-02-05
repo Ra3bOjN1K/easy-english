@@ -1,5 +1,4 @@
 from django.db import models
-
 from easy_english.services.translator.base import Lang, StructTypes
 
 
@@ -7,8 +6,8 @@ class ForeignWord(models.Model):
     title = models.CharField(max_length=240)
     type = models.SmallIntegerField(choices=StructTypes.choices(),
                                     default=StructTypes.unknown)
-    language = models.CharField(max_length=3, choices=Lang.choices(),
-                                default=Lang.english)
+    language = models.SmallIntegerField(choices=Lang.choices(),
+                                        default=Lang.english)
     transcription = models.CharField(max_length=240, default='')
     created = models.DateTimeField(auto_now_add=True)
 

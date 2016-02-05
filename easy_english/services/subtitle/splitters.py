@@ -2,7 +2,6 @@
 
 from django.core.files.uploadedfile import UploadedFile
 
-from easy_english.services.subtitle.base import Subtitle
 from easy_english.utils.time_handler import time_str_to_seconds
 
 
@@ -49,6 +48,7 @@ class SrtSubtitlesSplitter:
         return self._new_subtitle_id
 
     def _to_subtitle(self, content_block):
+        from easy_english.services.subtitle.base import Subtitle
         subtitle = Subtitle()
         subtitle.id = self._get_new_subtitle_id()
         quote_lines = []
