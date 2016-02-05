@@ -22,11 +22,14 @@ app.factory('SubtitlesParserService', ['$q', '$timeout', '$http', function ($q, 
             var formData = new FormData();
             formData.append("file", file);
 
-            $http.post("/api/v1/subtitles/prepare/", formData, {
+            $http.post("/api/v1/subtitles/", formData, {
                 withCredentials: true,
                 headers: {'Content-Type': undefined},
                 transformRequest: angular.identity
             }).success(function (result) {
+                if (typeof result === 'string') {
+                    result = JSON.parse(result)
+                }
                 deferred.resolve(result);
             }).error(function (error) {
                 console.error(error);

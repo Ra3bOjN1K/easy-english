@@ -53,7 +53,7 @@ app.directive('translateWordDialogWrapper', [
                     var translatedWordDlg = translatedWordDlgWrapper.find('.translated-word-dlg');
                     var vjsTech = $($document).find('.vjs-tech');
                     if (!translatedWordDlg.length) {
-                        var dlgTemplate = '<div class="translated-word-dlg" ng-show="player.canShowTranslateDlg()" ng-include="\'/templates/translate_word_dialog_template.html\'"></div>';
+                        var dlgTemplate = '<div class="translated-word-dlg" ng-show="player.canShowTranslateDlg()" ng-include="\'/static/templates/partials/translate_word_dialog_template.html\'"></div>';
                         translatedWordDlgWrapper.append($compile(dlgTemplate)(scope));
 
                         vjsTech.on('mouseover', function () {
