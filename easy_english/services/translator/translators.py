@@ -19,6 +19,11 @@ class LinguaLeoTranslator:
                 votes=int(translation_content.get('votes'))
             )
 
+        if c.get('error_code', None):
+            res = Result.get_empty_result()
+            res.word = c.get('error_msg')
+            return res
+
         return Result(
             word=orig_word,
             transcription=c.get('transcription'),

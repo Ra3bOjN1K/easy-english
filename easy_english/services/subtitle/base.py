@@ -9,8 +9,8 @@ from easy_english.services.subtitle.splitters import SrtSubtitlesSplitter
 class Subtitle(JSONEncoder):
     id = 0
     code = ''
-    start = ''
-    end = ''
+    start = float()
+    end = float()
     quote = ''
 
     def default(self, o):

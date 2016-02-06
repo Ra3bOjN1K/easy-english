@@ -19,14 +19,14 @@ class SrtSubtitlesSplitter:
 
         self._uploaded_file = uploaded_file
         self._file_encoding = get_file_encoding(self._uploaded_file)
-        self._file_content = self._get_file_content()
+        self._file_content = self._get_file_content().replace("\r", "")
         self._new_subtitle_id = 0
 
     def _get_file_content(self):
         content = []
         if not isinstance(self._uploaded_file, UploadedFile):
             raise IOError(
-                "Type file \'%s\' is unavailable." % type(self._uploaded_file))
+                "File type \'%s\' is unavailable." % type(self._uploaded_file))
         for chunk in self._uploaded_file.chunks():
             content.append(chunk.decode(encoding=self._file_encoding))
         self._uploaded_file.close()
@@ -40,7 +40,7 @@ class SrtSubtitlesSplitter:
         return self.subtitle_list
 
     def _divide_file_content_into_blocks(self):
-        quote_blocks = self._file_content.split('\r\n\r\n')
+        quote_blocks = self._file_content.split("\n\n")
         return quote_blocks
 
     def _get_new_subtitle_id(self):
@@ -52,7 +52,7 @@ class SrtSubtitlesSplitter:
         subtitle = Subtitle()
         subtitle.id = self._get_new_subtitle_id()
         quote_lines = []
-        for idx, item in enumerate(content_block.split('\r\n')):
+        for idx, item in enumerate(content_block.split('\n')):
             if idx == 0:
                 subtitle.code = item
             elif idx == 1:

@@ -1,11 +1,10 @@
-import json
-
 from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
-
-from easy_english.services.subtitle.base import Subtitle, get_split_subtitles
+from easy_english.serializers import (TranslatorResultSerializer,
+    SubtitleSerializer)
+from easy_english.services.subtitle.base import get_split_subtitles
 from easy_english.services.translator.base import get_translation
 
 JSON_CONTENT_TYPE = 'application/json'
@@ -17,12 +16,16 @@ class IndexView(TemplateView):
 
 class SubtitleListView(ListCreateAPIView):
     def post(self, request, *args, **kwargs):
-        subtitles = get_split_subtitles(request.FILES['file'])
-        return Response(
-            data=json.dumps(subtitles, cls=Subtitle),
-            content_type=JSON_CONTENT_TYPE,
-            status=status.HTTP_200_OK
-        )
+        if request.FILES and len(request.FILES):
+            subtitles = get_split_subtitles(request.FILES['file'])
+            ser_subtitles = [SubtitleSerializer(x).data for x in subtitles]
+            return Response(
+                data=ser_subtitles,
+                content_type=JSON_CONTENT_TYPE,
+                status=status.HTTP_200_OK
+            )
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class TranslatorView(ListAPIView):
@@ -34,8 +37,9 @@ class TranslatorView(ListAPIView):
         if action == 'translate':
             source = request.query_params.get('source', '')
             translation = get_translation(source)
+            ser_translation = TranslatorResultSerializer(translation)
             return Response(
-                data=translation,
+                data=ser_translation.data,
                 content_type=JSON_CONTENT_TYPE,
                 status=status.HTTP_200_OK
             )

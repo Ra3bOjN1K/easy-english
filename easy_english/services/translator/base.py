@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from enum import Enum
 
+import re
+
 from easy_english.services.translator.translators import LinguaLeoTranslator
 
 
 class Lang(Enum):
-    english = 0
+    english = 1
 
     @classmethod
     def choices(cls):
@@ -13,10 +15,10 @@ class Lang(Enum):
 
 
 class StructTypes(Enum):
-    unknown = 0
-    word = 1
-    phrasal_verb = 2
-    sentence = 3
+    unknown = 1
+    word = 2
+    phrasal_verb = 3
+    sentence = 4
 
     @classmethod
     def choices(cls):
@@ -59,11 +61,13 @@ def _model_to_result(fw) -> Result:
     prons = [x.name for x in fw.pronunciations.all()]
     trans = []
     for p in fw.translations.all():
-        trans.append({
-            'word': p.title,
-            'votes': int(p.votes),
-            'pictures': [x.name for x in p.t_pictures.all()]
-        })
+        trans.append(
+            TranslationItem(
+                word=p.title,
+                votes=int(p.votes),
+                pictures=[x.name for x in p.t_pictures.all()]
+            )
+        )
 
     return Result(
         word=fw.title,
@@ -76,25 +80,41 @@ def _model_to_result(fw) -> Result:
 
 def _get_result_from_db(word):
     from easy_english.models import ForeignWord
-    res = ForeignWord.objects.get(word=word.strip())
-    return None if not res else _model_to_result(res)
+    res = ForeignWord.objects.filter(title=word.strip()).all()
+    assert len(res) <= 1, 'Returned more than one value'
+    return None if len(res) == 0 else _model_to_result(res.first())
 
 
 def _save_result_to_db(result):
     from easy_english.models import (Translation, WordPronunciation,
         WordAssociationPicture, ForeignWord)
+
+    if not len(result.translations) or not result.word:
+        return
+
     fw = ForeignWord(title=result.word, transcription=result.transcription)
     fw.save()
     for tr in result.translations:
-        Translation(title=tr.word, votes=tr.votes, foreign_word=fw).save()
+        translation = Translation(title=tr.word, votes=tr.votes,
+                                  foreign_word=fw)
+        translation.save()
+        for pic in tr.pictures:
+            WordAssociationPicture(name=pic,
+                                   translation_word=translation).save()
+
     for pron in result.pronunciations:
-        WordPronunciation(name=pron, foreign_word=fw).save()
+        if pron and len(pron.strip()):
+            WordPronunciation(name=pron, foreign_word=fw).save()
     for pic in result.pictures:
-        WordAssociationPicture(name=pic, foreign_word=fw).save()
+        if pic and len(pic.strip()):
+            WordAssociationPicture(name=pic, foreign_word=fw).save()
+
+
+_is_word_pattern = re.compile("^[a-z]+([-']?[a-z]+)*$", re.IGNORECASE)
 
 
 def _is_word(word) -> bool:
-    return len(word.strip().split(' ')) == 1
+    return not _is_word_pattern.search(word) is None
 
 
 def get_translation(word) -> Result:

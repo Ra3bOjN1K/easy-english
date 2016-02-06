@@ -10,11 +10,11 @@ TESTS_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class SrtSubtitlesSplitterTestCase(TestCase):
     SUBTITLES_FILE_UTF8_PATH = os.path.join(
-        TESTS_DIR, 'resources', 'srt_subtitles_utf-8.srt')
+        TESTS_DIR, '../resources', 'srt_subtitles_utf-8.srt')
     SUBTITLES_FILE_UTF8_BOM_PATH = os.path.join(
-        TESTS_DIR, 'resources', 'srt_subtitles_utf-8-bom.srt')
+        TESTS_DIR, '../resources', 'srt_subtitles_utf-8-bom.srt')
     SUBTITLES_FILE_WIN1251_PATH = os.path.join(
-        TESTS_DIR, 'resources', 'srt_subtitles_win1251.srt')
+        TESTS_DIR, '../resources', 'srt_subtitles_win1251.srt')
 
     def _build_uploaded_file(self, file_path):
         content = open(file_path, 'rb').read()
