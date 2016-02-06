@@ -19,7 +19,7 @@ LOGGING = {
         },
         'file_common': {
             'level': 'DEBUG',
-            'class': 'logging.RotatingFileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 7,
             'filename': 'logs/easy_english/common.log',
@@ -27,7 +27,7 @@ LOGGING = {
         },
         'file_error': {
             'level': 'ERROR',
-            'class': 'logging.RotatingFileHandler',
+            'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 7,
             'filename': 'logs/easy_english/error.log',
