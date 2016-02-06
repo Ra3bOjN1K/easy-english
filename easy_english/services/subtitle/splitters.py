@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from django.core.files.uploadedfile import UploadedFile
-
 from easy_english.utils.time_handler import time_str_to_seconds
 
 
 class SrtSubtitlesSplitter:
-
     SUBTITLE_TIME_PATTERN = '(\d{1,2}):(\d{1,2}):(\d{1,2}),(\d{1,3})'
 
     _uploaded_file = None
