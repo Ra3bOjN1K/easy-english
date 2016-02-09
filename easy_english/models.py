@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from easy_english.services.translator.base import Lang, StructTypes
 
@@ -43,3 +44,23 @@ class WordPronunciation(models.Model):
 
     class Meta:
         db_table = 'ee_word_pronunciation'
+
+
+class UserForeignWord(models.Model):
+    user = models.ForeignKey(User, related_name='foreign_words')
+    foreign_word = models.CharField(max_length=240)
+    translation = models.CharField(max_length=240)
+    is_exported = models.BooleanField(default=False)
+    is_learned = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'ee_user_foreign_word'
+
+
+class UserWordContext(models.Model):
+    user_word = models.ForeignKey(UserForeignWord, related_name='contexts')
+    context = models.CharField(max_length=240)
+
+    class Meta:
+        db_table = 'ee_user_word_context'

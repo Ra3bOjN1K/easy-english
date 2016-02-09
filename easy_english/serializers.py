@@ -90,6 +90,7 @@ class TranslationItemSerializer(serializers.Serializer):
     pictures = serializers.ListField(
         child=serializers.CharField(max_length=240)
     )
+    is_added = serializers.BooleanField()
 
 
 class TranslatorResultSerializer(serializers.Serializer):

@@ -49,6 +49,7 @@ class TranslationItem:
     word = ''
     votes = 0
     pictures = []
+    is_added = False
 
     def __init__(self, word, votes, pictures):
         self.word = word

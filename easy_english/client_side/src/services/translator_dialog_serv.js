@@ -34,6 +34,7 @@ app.factory('TranslatorDialog', ['$rootScope', 'DictionaryService', function ($r
             this.show();
             DictionaryService.translate(sourceObj).then(function (resultData) {
                 _translatedWordObj = _handleTranslatedResult(resultData);
+                _translatedWordObj.context = sourceObj.context;
                 _isWordTranslated = true;
             });
         },

@@ -1,6 +1,7 @@
 import logging
-
 import datetime
+
+from django.contrib.auth.models import AnonymousUser
 from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -14,6 +15,7 @@ from easy_english.serializers import (TranslatorResultSerializer,
 from easy_english.services.auth import ExpiringTokenAuthentication
 from easy_english.services.subtitle.base import get_split_subtitles
 from easy_english.services.translator.base import get_translation
+from easy_english.services.user_dict import UserDictionary
 
 logger = logging.getLogger(__name__)
 
@@ -101,6 +103,9 @@ class TranslatorView(ListAPIView):
             try:
                 source = request.query_params.get('source', '')
                 translation = get_translation(source)
+                if hasattr(request, 'user'):
+                    user_dict = UserDictionary(request.user)
+                    translation = user_dict.mark_exist_translations(translation)
                 ser_translation = TranslatorResultSerializer(translation)
                 return Response(
                     data=ser_translation.data,
@@ -112,3 +117,14 @@ class TranslatorView(ListAPIView):
                 return Response(status=status.HTTP_404_NOT_FOUND)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserDictionaryView(ListCreateAPIView):
+    authentication_classes = (ExpiringTokenAuthentication,)
+
+    def post(self, request, *args, **kwargs):
+        if hasattr(request, 'user') and not isinstance(request.user,
+                                                       AnonymousUser):
+            pass
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)

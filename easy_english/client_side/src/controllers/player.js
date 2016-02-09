@@ -315,22 +315,34 @@ app.controller('VideoPlayerCtrl', [
     }]);
 
 app.controller('TranslateWordDialogCtrl', [
-    '$scope', 'TranslatorDialog', 'UserService', function ($scope, TranslatorDialog, UserService) {
+    '$scope', 'TranslatorDialog', 'UserService', 'UserDictionaryService',
+    function ($scope, TranslatorDialog, UserService, UserDictionaryService) {
 
-    $scope.vm = {
-        model: angular.copy(TranslatorDialog.getTranslatedWord()),
-        isWordTranslated: false,
-        canSaveTranslatedWord: canSaveTranslatedWord
-    };
+        $scope.vm = {
+            model: angular.copy(TranslatorDialog.getTranslatedWord()),
+            isWordTranslated: false,
+            isUserLoggedIn: isUserLoggedIn,
+            addUserWord: addUserWord
+        };
 
-    function canSaveTranslatedWord() {
-        return UserService.hasToken();
-    }
+        function isUserLoggedIn() {
+            return UserService.hasToken();
+        }
 
-    $scope.$watch(function() {
-        return TranslatorDialog.isWordTranslated()
-    }, function () {
-        $scope.vm.isWordTranslated = TranslatorDialog.isWordTranslated();
-        $scope.vm.model = angular.copy(TranslatorDialog.getTranslatedWord());
-    })
-}]);
+        function addUserWord(translation) {
+            var word = {
+                orig: $scope.vm.model.word,
+                translation: translation.word,
+                votes: translation.votes,
+                contexts: [$scope.vm.model.context]
+            };
+            UserDictionaryService.addNewWord(word)
+        }
+
+        $scope.$watch(function () {
+            return TranslatorDialog.isWordTranslated()
+        }, function () {
+            $scope.vm.isWordTranslated = TranslatorDialog.isWordTranslated();
+            $scope.vm.model = angular.copy(TranslatorDialog.getTranslatedWord());
+        })
+    }]);
