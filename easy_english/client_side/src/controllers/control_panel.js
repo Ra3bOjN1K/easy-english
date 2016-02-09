@@ -4,6 +4,106 @@ app.controller('ControlPanelCtrl', ['$rootScope', '$scope', function ($rootScope
 
 }]);
 
+app.controller('AuthorizationCtrl', [
+    '$scope', 'AuthService', 'UserService', 'UserLoginForm', 'UserRegistrationForm',
+    function ($scope, AuthService, UserService, UserLoginForm, UserRegistrationForm) {
+
+        var vm = this;
+
+        vm.panel = {
+            isOpened: false,
+            open: openPanel,
+            close: closePanel
+        };
+
+        vm.login = {};
+        vm.reg = {};
+        vm.userLogOut = userLogOut;
+
+        function initLoginForm() {
+            return {
+                model: {
+                    email: null,
+                    password: null
+                },
+                fields: angular.copy(UserLoginForm.getFieldsOptions()),
+                formErrors: [],
+                onSubmit: onLoginSubmit
+            }
+        }
+
+        function initRegForm() {
+            return {
+                model: {
+                    email: null,
+                    password: null,
+                    password_confirm: null
+                },
+                fields: angular.copy(UserRegistrationForm.getFieldsOptions()),
+                formErrors: [],
+                onSubmit: onRegSubmit
+            }
+        }
+
+        function onLoginSubmit() {
+            if (vm.login.form.$valid) {
+                AuthService.login(vm.login.model.email, vm.login.model.password).then(function () {
+                    closePanel();
+                }, function (error) {
+                    if (error.data && error.data.non_field_errors) {
+                        vm.login.formErrors = error.data.non_field_errors;
+                    }
+                })
+            }
+        }
+
+        function onRegSubmit() {
+            if (vm.reg.form.$valid) {
+                AuthService.signIn(
+                    vm.reg.model.email,
+                    vm.reg.model.password,
+                    vm.reg.model.password_confirm
+                ).then(function () {
+                    closePanel();
+                }, function (error) {
+                    if (error.data) {
+                        angular.forEach(error.data, function (attr) {
+                            vm.reg.formErrors.push.apply(vm.reg.formErrors, attr);
+                        })
+                    }
+                })
+            }
+        }
+
+        function userLogOut () {
+            AuthService.logout()
+        }
+
+        function clearLoginForm() {
+            vm.login = {};
+        }
+
+        function clearRegForm() {
+            vm.reg = {};
+        }
+
+        function openPanel() {
+            vm.login = initLoginForm();
+            vm.reg = initRegForm();
+            vm.panel.isOpened = true;
+        }
+
+        function closePanel() {
+            vm.panel.isOpened = false;
+            clearLoginForm();
+            clearRegForm();
+        }
+
+        vm.isUserLoggedIn = function () {
+            return UserService.hasToken()
+        };
+    }]);
+
 app.controller('VideoFilesManageCtrl', [
     '$rootScope', '$scope', '$timeout', 'hotkeys', function ($rootScope, $scope, $timeout, hotkeys) {
 

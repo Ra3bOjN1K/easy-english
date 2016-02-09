@@ -60,7 +60,7 @@ def _model_to_result(fw) -> Result:
     pics = [x.name for x in fw.pictures.all()]
     prons = [x.name for x in fw.pronunciations.all()]
     trans = []
-    for p in fw.translations.all():
+    for p in fw.translations.order_by('-votes').all():
         trans.append(
             TranslationItem(
                 word=p.title,

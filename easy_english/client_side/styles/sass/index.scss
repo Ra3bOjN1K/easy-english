@@ -47,17 +47,16 @@ body {
 
 .control-panel {
   @include init-flex-position(column);
-  @include single-box-shadow(2px, 2px, 8px, 1px, #404040);
-  background: rgba(206, 206, 206, .5);
-  border-right: 1px solid #333;
-  padding-top: .5%;
-  width: 56px;
+  @include single-box-shadow(2px, 2px, 8px, 1px, #333);
+  background: #36393d;
+  border-right: 1px solid #222;
+  width: 48px;
   z-index: 1;
 }
 
 .control-panel > div {
   @include init-flex-position(column);
-  @include flex(1 1);
+  //@include flex(1 1);
 }
 
 .slide-panel-wrapper {
@@ -65,32 +64,64 @@ body {
   @include flex(1 1);
 
   hr {
-    border-color: #aaa;
-    margin: 10px 0;
-    outline-color: #666;
+    border-color: #444;
+    margin: 4px 0 10px;
+    outline-color: #111;
   }
 
   .control-panel-button {
-    @include single-box-shadow(1px, 1px, 5px, .2px, #555);
+    @include single-box-shadow(1px, 1px, 5px, .2px, #222);
     @include init-flex-position(column);
     @include align-items(center);
     @include justify-content(center);
-    background: #fff;
-    border: 1px solid #444;
+    background: #fafafa;
+    border: 1px solid #333;
     border-radius: 2px;
     color: #666;
-    height: 34px;
-    margin: 3px 6px;
+    height: 36px;
+    margin: 3px;
     padding: 2px 0;
     text-decoration: none;
 
     i {
-      font-size: 18pt;
+      font-size: 14pt;
     }
 
     .en,
     .ru {
       font-size: 12pt;
+    }
+  }
+
+  .files-btn {
+    color: #c99700;
+  }
+
+  .auth-btn {
+    @include init-flex-position(column);
+    @include align-items(center);
+    background: #ccc;
+    border-radius: 2px;
+    height: 36px;
+    margin: 4px 0 0;
+
+    i {
+      font-size: 13pt;
+    }
+
+    span {
+      font-size: 7pt;
+      margin: 0 2px;
+    }
+
+    &.in {
+      background: #4ba84d;
+      color: #fff;
+    }
+
+    &.out {
+      background: #e26156;
+      color: #fff;
     }
   }
 }
@@ -103,10 +134,10 @@ body {
 }
 
 .slide-panel__close-button {
+  color: #444;
   position: absolute;
   right: 5px;
   top: 5px;
-  color: #444;
 
   &:active {
     color: #666;

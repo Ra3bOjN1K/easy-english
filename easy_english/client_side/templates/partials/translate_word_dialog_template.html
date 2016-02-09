@@ -10,7 +10,7 @@
         <div class="translated-word-item" ng-repeat="translate in vm.model.translations" ng-if="vm.isWordTranslated">
             <div class="translated-word">{{translate.word}}</div>
             <span class="word-rate" word-votes-handler>{{translate.votes}}</span>
-            <a class="save-btn"><img src="/static/styles/img/add.png"></a>
+            <a class="save-btn" ng-if="vm.canSaveTranslatedWord()"><img src="/static/styles/img/add.png"></a>
         </div>
     </div>
 </div>

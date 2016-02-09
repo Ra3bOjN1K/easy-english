@@ -1,0 +1,41 @@
+<div ng-controller="AuthorizationCtrl as vm" class="slide-panel-wrapper">
+
+    <a class="control-panel-button auth-btn in" ng-if="!vm.isUserLoggedIn()" href="" ng-click="vm.panel.open()">
+        <i class="fa fa-sign-in"></i> <span>ВОЙТИ</span>
+    </a>
+    <a class="control-panel-button auth-btn out" ng-if="vm.isUserLoggedIn()" href="" ng-click="vm.userLogOut()">
+        <span>ВЫЙТИ</span> <i class="fa fa-sign-out"></i>
+    </a>
+
+    <div pageslide ps-open="vm.panel.isOpened" class="left-slide-panel" ps-side="left" ps-speed=".15"
+         ps-cloak="true" ps-size="390px">
+        <a class="slide-panel__close-button" href="" ng-click="vm.panel.close()"><i class="fa fa-times"></i></a>
+
+        <div class="slide-panel-data-container" ng-if="vm.panel.isOpened">
+            <uib-tabset justified="true" class="auth-block">
+                <uib-tab heading="Регистрация">
+                    <form class="auth-form" name="vm.reg.form" novalidate>
+                        <formly-form form="vm.reg.form" model="vm.reg.model" fields="vm.reg.fields"
+                                     options="vm.reg.options"></formly-form>
+                        <div class="form-errors" ng-show="!!vm.reg.formErrors">
+                            <div class="error-messages" ng-repeat="error in vm.reg.formErrors">{{ error }}</div>
+                        </div>
+                        <a class="btn btn-primary submit-button" ng-disabled="vm.reg.form.$invalid"
+                           ng-click="vm.reg.onSubmit()">Зарегистрироваться</a>
+                    </form>
+                </uib-tab>
+                <uib-tab heading="Вход" active="true">
+                    <form class="auth-form" name="vm.login.form" novalidate>
+                        <formly-form form="vm.login.form" model="vm.login.model" fields="vm.login.fields"
+                                     options="vm.login.options"></formly-form>
+                        <div class="form-errors" ng-show="!!vm.login.formErrors">
+                            <div class="error-messages" ng-repeat="error in vm.login.formErrors">{{ error }}</div>
+                        </div>
+                        <a class="btn btn-primary submit-button" ng-disabled="vm.login.form.$invalid"
+                           ng-click="vm.login.onSubmit()">Войти</a>
+                    </form>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+</div>

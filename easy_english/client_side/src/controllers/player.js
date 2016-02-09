@@ -314,11 +314,18 @@ app.controller('VideoPlayerCtrl', [
             })
     }]);
 
-app.controller('TranslateWordDialogCtrl', ['$scope', 'TranslatorDialog', function ($scope, TranslatorDialog) {
+app.controller('TranslateWordDialogCtrl', [
+    '$scope', 'TranslatorDialog', 'UserService', function ($scope, TranslatorDialog, UserService) {
+
     $scope.vm = {
         model: angular.copy(TranslatorDialog.getTranslatedWord()),
-        isWordTranslated: false
+        isWordTranslated: false,
+        canSaveTranslatedWord: canSaveTranslatedWord
     };
+
+    function canSaveTranslatedWord() {
+        return UserService.hasToken();
+    }
 
     $scope.$watch(function() {
         return TranslatorDialog.isWordTranslated()

@@ -14,7 +14,7 @@ app.factory('PlayerService', ['$q', function ($q) {
             VjsComponent.registerComponent('SubtitlesWrapper', SubtitlesWrapper);
 
             _subtitlesWrapperEl = _player.addChild('SubtitlesWrapper');
-            _subtitlesWrapperEl.addClass('subtitles-wrapper-block hidden');
+            _subtitlesWrapperEl.addClass('subtitles-wrapper-block');
         }
     }
 

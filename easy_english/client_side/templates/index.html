@@ -9,9 +9,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.woff">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf">
     <link href="http://vjs.zencdn.net/5.0/video-js.min.css" rel="stylesheet">
+    <link href="{% static "vendors/css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "vendors/css/hotkeys.min.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/index.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/video_files_panel.css" %}" rel="stylesheet">
+    <link href="{% static "styles/css/auth_panel.css" %}" rel="stylesheet">
 
     <title>Easy English</title>
 
@@ -26,6 +28,7 @@
 
     {% verbatim %}
     <div class="control-panel" ng-controller="ControlPanelCtrl">
+        <div ng-include="'/static/templates/partials/control_panel/authorisation_template.html'"></div>
         <div ng-include="'/static/templates/partials/control_panel/video_files_manage_template.html'"></div>
     </div>
 
@@ -41,11 +44,28 @@
 
 </body>
 
+{% verbatim %}
+<script type="text/ng-template" id="error-messages.html">
+    <formly-transclude></formly-transclude>
+    <div ng-messages="fc.$error" ng-if="form.$submitted || options.formControl.$touched" class="error-messages">
+        <div ng-message="{{ ::name }}" ng-repeat="(name, message) in ::options.validation.messages"
+             class="message">{{ message(fc.$viewValue, fc.$modelValue, this) }}
+        </div>
+    </div>
+</script>
+{% endverbatim %}
+
 <script type="text/javascript" src="{% static "vendors/js/moment-with-locales.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/angular-pageslide-directive.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/ngStorage.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/angular-animate.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/angular-messages.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/api-check.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/formly.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/angular-formly-templates-bootstrap.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/lodash.compat.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/restangular.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/ui-bootstrap-tpls-1.1.2.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/hotkeys.min.js" %}"></script>
 <script src="http://vjs.zencdn.net/5.0/video.min.js"></script>
 
@@ -58,5 +78,7 @@
 <script type="text/javascript" src="{% static "src/services/subtitles_handler.js" %}"></script>
 <script type="text/javascript" src="{% static "src/services/dictionary_serv.js" %}"></script>
 <script type="text/javascript" src="{% static "src/services/translator_dialog_serv.js" %}"></script>
+<script type="text/javascript" src="{% static "src/services/auth.js" %}"></script>
+<script type="text/javascript" src="{% static "src/forms.js" %}"></script>
 
 </html>
