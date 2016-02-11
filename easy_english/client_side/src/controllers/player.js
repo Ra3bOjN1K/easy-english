@@ -331,12 +331,18 @@ app.controller('TranslateWordDialogCtrl', [
 
         function addUserWord(translation) {
             var word = {
-                orig: $scope.vm.model.word,
+                foreign_word: $scope.vm.model.word,
                 translation: translation.word,
                 votes: translation.votes,
                 contexts: [$scope.vm.model.context]
             };
-            UserDictionaryService.addNewWord(word)
+            UserDictionaryService.addNewWord(word).then(function () {
+                angular.forEach($scope.vm.model.translations, function (tr, idx) {
+                    if (angular.equals(translation.word, tr.word)) {
+                        $scope.vm.model.translations[idx].is_added = true
+                    }
+                })
+            })
         }
 
         $scope.$watch(function () {

@@ -1,0 +1,120 @@
+<div ng-controller="UserWordsManagerCtrl as vm" class="slide-panel-wrapper">
+
+    <a class="control-panel-button user-words" ng-if="vm.isUserLoggedIn()" href="" ng-click="vm.panel.open()">
+        <i class="fa fa-database"></i>
+    </a>
+
+    <div pageslide ps-open="vm.panel.isOpened" class="left-slide-panel" ps-side="left" ps-speed=".15"
+         ps-cloak="true" ps-size="800px">
+        <a class="slide-panel__close-button" href="" ng-click="vm.panel.close()"><i class="fa fa-times"></i></a>
+
+        <div class="slide-panel-data-container" ng-if="vm.panel.isOpened">
+            <uib-tabset justified="true" class="user-words-block">
+                <uib-tab heading="Актуальные слова" active="true" select="vm.actualWords.onTabSelect()">
+                    <div class="words-container">
+                        <div class="word-wrapper-header">
+                            <input type="checkbox" title="" ng-model="vm.actualWords.isAllWordsChecked"
+                            ng-change="vm.actualWords.checkAllWords()">
+                            <span class="orig-word"></span>
+                            <span class="translated-word"></span>
+                        </div>
+                        <div class="words-list">
+                            <div class="empty-word-list" ng-if="!vm.actualWords.list.length && vm.actualWords.isLoaded">
+                                В Вашем словаре пока нет слов.. =((
+                            </div>
+                            <div ng-repeat="word in vm.actualWords.list"
+                                 ng-if="vm.actualWords.list && vm.actualWords.isLoaded">
+                                <div class="indicators">
+                                    <div class="added-today"
+                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N</div>
+                                    <div class="exported" ng-class="{'ind-disable': !word.is_exported}">E</div>
+                                </div>
+                                <div class="word-wrapper">
+                                    <input type="checkbox" class="word-checker" title="" ng-model="word.isChecked"
+                                           ng-change="vm.actualWords.checkActualWord(word)">
+                                    <div class="orig-word">{{ word.foreign_word }}</div>
+                                    <div class="translated-word">{{ word.translation }}</div>
+                                    <div class="word-control">
+                                        <a class="mark-learned-btn"
+                                           ng-click="vm.actualWords.sendWordToLearned(word.id)">
+                                            <img src="/static/styles/img/check-mark.png">
+                                        </a>
+                                        <a class="del-btn" ng-click="vm.actualWords.deleteWord(word.id)">
+                                            <img src="/static/styles/img/del.png">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination-block">
+                        <div class="num-items-per-page">
+                            <span>Кол-во строк: </span>
+                            <input type="number" value="{{ vm.actualWords.wordsPerPage }}" min="15" max="100" step="5"
+                                   ng-model="vm.actualWords.wordsPerPage" title=""
+                                   ng-change="vm.actualWords.changeItemsPerPage()">
+                        </div>
+                        <uib-pagination total-items="vm.actualWords.totalWords" ng-model="vm.actualWords.currentPage"
+                                        max-size="vm.actualWords.maxPageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="true" next-text="Туда"
+                                        items-per-page="vm.actualWords.wordsPerPage" previous-text="Сюда"
+                                        ng-change="vm.actualWords.changePage()">
+                        </uib-pagination>
+                    </div>
+                </uib-tab>
+                <uib-tab heading="Уже знаю" select="vm.learnedWords.onTabSelect()">
+                    <div class="words-container">
+                        <div class="word-wrapper-header">
+                            <input type="checkbox" title="" ng-model="vm.learnedWords.isAllWordsChecked"
+                                   ng-change="vm.learnedWords.checkAllWords()">
+                            <span class="orig-word"></span>
+                            <span class="translated-word"></span>
+                        </div>
+                        <div class="words-list">
+                            <div class="empty-word-list" ng-if="!vm.learnedWords.list.length && vm.learnedWords.isLoaded">
+                                В Вашем словаре пока нет изученных слов.. =((
+                            </div>
+                            <div ng-repeat="word in vm.learnedWords.list"
+                                 ng-if="vm.learnedWords.list && vm.learnedWords.isLoaded">
+                                <div class="indicators">
+                                    <div class="added-today"
+                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N</div>
+                                    <div class="exported" ng-class="{'ind-disable': !word.is_exported}">E</div>
+                                </div>
+                                <div class="word-wrapper">
+                                    <input type="checkbox" class="word-checker" title="" ng-model="word.isChecked"
+                                           ng-change="vm.learnesWords.checkActualWord(word)">
+                                    <div class="orig-word">{{ word.foreign_word }}</div>
+                                    <div class="translated-word">{{ word.translation }}</div>
+                                    <div class="word-control">
+                                        <a class="undo-btn"
+                                           ng-click="vm.learnedWords.sendWordToActual(word.id)">
+                                            <img src="/static/styles/img/undo.png">
+                                        </a>
+                                        <a class="del-btn" ng-click="vm.learnedWords.deleteWord(word.id)">
+                                            <img src="/static/styles/img/del.png">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pagination-block">
+                        <div class="num-items-per-page">
+                            <span>Кол-во строк: </span>
+                            <input type="number" value="{{ vm.learnedWords.wordsPerPage }}" min="15" max="100" step="5"
+                                   ng-model="vm.learnedWords.wordsPerPage" title=""
+                                   ng-change="vm.learnedWords.changeItemsPerPage()">
+                        </div>
+                        <uib-pagination total-items="vm.learnedWords.totalWords" ng-model="vm.learnedWords.currentPage"
+                                        max-size="vm.learnedWords.maxPageSize" class="pagination-sm"
+                                        boundary-link-numbers="true" rotate="true" next-text="Туда"
+                                        items-per-page="vm.learnedWords.wordsPerPage" previous-text="Сюда"
+                                        ng-change="vm.learnedWords.changePage()">
+                        </uib-pagination>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+</div>

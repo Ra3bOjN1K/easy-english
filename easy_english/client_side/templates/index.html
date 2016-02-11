@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
 
+    <link rel="shortcut icon" href="{% static 'styles/img/favicon.ico' %}" type="image/png"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.woff2">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.woff">
@@ -14,6 +15,7 @@
     <link href="{% static "styles/css/index.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/video_files_panel.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/auth_panel.css" %}" rel="stylesheet">
+    <link href="{% static "styles/css/user_words_manager.css" %}" rel="stylesheet">
 
     <title>Easy English</title>
 
@@ -30,6 +32,7 @@
     <div class="control-panel" ng-controller="ControlPanelCtrl">
         <div ng-include="'/static/templates/partials/control_panel/authorisation_template.html'"></div>
         <div ng-include="'/static/templates/partials/control_panel/video_files_manage_template.html'"></div>
+        <div ng-include="'/static/templates/partials/control_panel/user_words_manager_template.html'"></div>
     </div>
 
     <div ng-controller="VideoPlayerCtrl" class="player-things" video-player-auto-size

@@ -93,10 +93,6 @@ body {
     }
   }
 
-  .files-btn {
-    color: #c99700;
-  }
-
   .auth-btn {
     @include init-flex-position(column);
     @include align-items(center);
@@ -123,6 +119,14 @@ body {
       background: #e26156;
       color: #fff;
     }
+  }
+
+  .files-btn {
+    color: #c99700;
+  }
+
+  .user-words {
+    color: #2e6da4;
   }
 }
 
@@ -445,6 +449,13 @@ body {
       margin: 1px;
       width: auto;
     }
+  }
+
+  .disabled-btn {
+    @include single-box-shadow(0, 0, 0, 0);
+    background: transparent;
+    border-color: transparent;
+    cursor: default;
   }
 }
 

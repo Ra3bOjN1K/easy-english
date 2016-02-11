@@ -146,9 +146,6 @@ body:after {
 .slide-panel-wrapper .control-panel-button .ru {
   font-size: 12pt;
 }
-.slide-panel-wrapper .files-btn {
-  color: #c99700;
-}
 .slide-panel-wrapper .auth-btn {
   display: -moz-box;
   -moz-box-orient: vertical;
@@ -181,6 +178,12 @@ body:after {
 .slide-panel-wrapper .auth-btn.out {
   background: #e26156;
   color: #fff;
+}
+.slide-panel-wrapper .files-btn {
+  color: #c99700;
+}
+.slide-panel-wrapper .user-words {
+  color: #2e6da4;
 }
 
 .left-slide-panel {
@@ -597,6 +600,14 @@ body:after {
   height: 18px;
   margin: 1px;
   width: auto;
+}
+.translated-word-item .disabled-btn {
+  -moz-box-shadow: 0 0 0 0 #333333;
+  -webkit-box-shadow: 0 0 0 0 #333333;
+  box-shadow: 0 0 0 0 #333333;
+  background: transparent;
+  border-color: transparent;
+  cursor: default;
 }
 
 .translated-word-item:hover {

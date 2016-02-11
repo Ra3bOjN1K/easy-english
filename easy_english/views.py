@@ -1,6 +1,5 @@
 import logging
 import datetime
-
 from django.contrib.auth.models import AnonymousUser
 from django.views.generic import TemplateView
 from rest_framework import status
@@ -11,7 +10,8 @@ from rest_framework.generics import (ListCreateAPIView, ListAPIView,
 from rest_framework.response import Response
 from easy_english.serializers import (TranslatorResultSerializer,
     SubtitleSerializer, NewUserSerializer, AuthTokenSerializer,
-    SubtitleListSerializer)
+    SubtitleListSerializer, UserForeignWordSerializer,
+    UserForeignWordListSerializer)
 from easy_english.services.auth import ExpiringTokenAuthentication
 from easy_english.services.subtitle.base import get_split_subtitles
 from easy_english.services.translator.base import get_translation
@@ -20,6 +20,15 @@ from easy_english.services.user_dict import UserDictionary
 logger = logging.getLogger(__name__)
 
 JSON_CONTENT_TYPE = 'application/json'
+
+
+def is_user_authorized_inside_request(request):
+    return hasattr(request, 'user') and not isinstance(request.user, AnonymousUser)
+
+
+def check_authorized_user_inside_request(request):
+    if not is_user_authorized_inside_request(request):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class IndexView(TemplateView):
@@ -103,7 +112,7 @@ class TranslatorView(ListAPIView):
             try:
                 source = request.query_params.get('source', '')
                 translation = get_translation(source)
-                if hasattr(request, 'user'):
+                if is_user_authorized_inside_request(request):
                     user_dict = UserDictionary(request.user)
                     translation = user_dict.mark_exist_translations(translation)
                 ser_translation = TranslatorResultSerializer(translation)
@@ -121,10 +130,60 @@ class TranslatorView(ListAPIView):
 
 class UserDictionaryView(ListCreateAPIView):
     authentication_classes = (ExpiringTokenAuthentication,)
+    ACTUAL_WORDS = 'actual'
+    LEARNED_WORDS = 'learned'
+    ACTION_DELETE = 'delete'
+    ACTION_SEND_TO_LEARNED = 'send_to_learned'
+
+    def get(self, request, *args, **kwargs):
+        check_authorized_user_inside_request(request)
+        user_dict = UserDictionary(request.user)
+        if request.query_params:
+            type_words = request.query_params.get('type_words', None)
+            page_num = int(request.query_params.get('target_page', 1))
+            items_per_page = int(request.query_params.get('items_per_page', 15))
+            if type_words == self.ACTUAL_WORDS:
+                total_count, words = user_dict.get_actual_words(page_num,
+                                                                items_per_page)
+                serializer = UserForeignWordListSerializer(data={
+                    'total_count': total_count,
+                    'foreign_words': words
+                })
+                if serializer.is_valid(raise_exception=True):
+                    return Response(data=serializer.data,
+                                    status=status.HTTP_200_OK)
+            if type_words == self.LEARNED_WORDS:
+                total_count, words = user_dict.get_learned_words(page_num,
+                                                                 items_per_page)
+                serializer = UserForeignWordListSerializer(data={
+                    'total_count': total_count,
+                    'foreign_words': words
+                })
+                if serializer.is_valid(raise_exception=True):
+                    return Response(data=serializer.data,
+                                    status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, *args, **kwargs):
-        if hasattr(request, 'user') and not isinstance(request.user,
-                                                       AnonymousUser):
-            pass
-        else:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        check_authorized_user_inside_request(request)
+        try:
+            if request.query_params:
+                action = request.query_params.get('action', None)
+                user_dict = UserDictionary(request.user)
+                if action == self.ACTION_DELETE:
+                    user_dict.delete_word_by_id(request.data.get('word_id'))
+                    return Response(status=status.HTTP_200_OK)
+                if action == self.ACTION_SEND_TO_LEARNED:
+                    value = True if request.query_params.get('value') == 'true' else False
+                    user_dict.mark_word_is_learned(request.data.get('word_id'), value)
+                    return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer = UserForeignWordSerializer(data=request.data)
+                if serializer.is_valid(raise_exception=True):
+                    serializer.save(user=request.user)
+                    return Response(status=status.HTTP_200_OK)
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            logger.exception(ex)
+            return Response(status=status.HTTP_400_BAD_REQUEST)

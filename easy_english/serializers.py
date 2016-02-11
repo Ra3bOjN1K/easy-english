@@ -5,6 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from easy_english.models import UserForeignWord
+
 
 class AuthTokenSerializer(serializers.Serializer):
     email = serializers.CharField()
@@ -104,4 +106,51 @@ class TranslatorResultSerializer(serializers.Serializer):
     )
     translations = serializers.ListField(
         child=TranslationItemSerializer()
+    )
+
+
+class UserForeignWordSerializer(serializers.Serializer):
+    id = serializers.IntegerField(required=False)
+    foreign_word = serializers.CharField(max_length=240)
+    translation = serializers.CharField(max_length=240)
+    votes = serializers.IntegerField()
+    contexts = serializers.ListField(
+        child=serializers.CharField(max_length=240)
+    )
+    created = serializers.DateTimeField(required=False)
+    is_exported = serializers.BooleanField(default=False)
+    is_learned = serializers.BooleanField(default=False)
+
+    def to_internal_value(self, data):
+        if isinstance(data, UserForeignWord):
+            return {
+                'id': data.id,
+                'foreign_word': data.foreign_word,
+                'translation': data.translation,
+                'votes': 0,
+                'contexts': data.contexts.all(),
+                'created': data.created,
+                'is_exported': data.is_exported,
+                'is_learned': data.is_learned
+            }
+        else:
+            return super(UserForeignWordSerializer, self).to_internal_value(data)
+
+    def create(self, validated_data):
+        from easy_english.models import UserForeignWord, UserWordContext
+        foreign_word = UserForeignWord()
+        foreign_word.user = validated_data['user']
+        foreign_word.foreign_word = validated_data['foreign_word']
+        foreign_word.translation = validated_data['translation']
+        foreign_word.save()
+        for c in validated_data['contexts']:
+            context = UserWordContext(context=c, user_word=foreign_word)
+            context.save()
+        return foreign_word
+
+
+class UserForeignWordListSerializer(serializers.Serializer):
+    total_count = serializers.IntegerField()
+    foreign_words = serializers.ListSerializer(
+        child=UserForeignWordSerializer()
     )

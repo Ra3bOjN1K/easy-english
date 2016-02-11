@@ -1,0 +1,172 @@
+@import 'settings';
+
+.user-words-block {
+
+  .tab-pane {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top-width: 0;
+    padding: 12px;
+  }
+
+  .words-container {
+    @include init-flex-position(column);
+    height: 510px;
+    margin: 8px;
+  }
+
+  .words-list {
+    @include flex(1 1);
+    overflow: auto;
+    padding-right: 10px;
+
+    & > div {
+      @include init-flex-position(row);
+    }
+  }
+
+  .empty-word-list {
+    @include init-flex-position(column);
+    @include justify-content(center);
+    @include align-items(center);
+    background: #fcfcfc;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13pt;
+    height: 80px;
+    margin-top: 20px;
+    text-align: center;
+    z-index: 9999;
+  }
+
+  .word-wrapper,
+  .word-wrapper-header {
+    @include init-flex-position(row);
+    @include align-items(center);
+  }
+
+  .word-wrapper-header {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+
+    input {
+      height: 17px;
+      margin-left: 19px;
+      width: 17px;
+    }
+  }
+
+  .word-wrapper {
+    @include flex(1 1);
+    background: #fcfcfc;
+    border: 1px solid #dedede;
+    border-radius: 2px;
+    margin: 2px;
+    position: relative;
+  }
+
+  .indicators {
+    @include init-flex-position(column);
+    @include justify-content(center);
+    @include align-items(center);
+    font-size: 7pt;
+    padding: 0 2px;
+    width: 8px;
+
+    .ind-disable {
+      color: transparent;
+    }
+  }
+
+  .added-today {
+    color: #328def;
+  }
+
+  .exported {
+    color: #fcb65f;
+  }
+
+  .word-checker,
+  .orig-word,
+  .translated-word,
+  .word-control {
+    margin: 2px 4px;
+  }
+
+  .word-checker {
+    height: 17px;
+    margin-left: 8px;
+    width: 17px;
+  }
+
+  .orig-word,
+  .translated-word {
+    @include flex(1 1);
+  }
+
+  .orig-word {
+    color: #c95452;
+    //font-weight: bolder;
+    text-decoration: underline;
+  }
+
+  .word-control {
+    @include init-flex-position(row);
+    @include justify-content(flex-end);
+    @include align-items(center);
+    line-height: 1;
+    width: 60px;
+
+    .mark-learned-btn,
+    .undo-btn,
+    .del-btn {
+      @include init-flex-position(column);
+      @include align-items(center);
+      @include justify-content(center);
+      background: #fff;
+      border-radius: 2px;
+      cursor: hand;
+      cursor: pointer;
+      height: 20px;
+      margin: 0 1px;
+      width: 20px;
+    }
+
+    .del-btn {
+      border: 1px solid #c95050;
+    }
+
+    .mark-learned-btn {
+      border: 1px solid #58c950;
+    }
+
+    .undo-btn {
+      border: 1px solid #eea236;
+    }
+
+    img {
+      height: 12px;
+      width: auto;
+    }
+  }
+}
+
+.pagination-block {
+  @include init-flex-position(row);
+  @include justify-content(space-between);
+  @include align-items(center);
+  border-top: 1px solid #ccc;
+
+  .num-items-per-page {
+    @include init-flex-position(column);
+    @include align-items(center);
+    input {
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      font-size: 9pt;
+      text-align: center;
+      width: 46px;
+    }
+  }
+}

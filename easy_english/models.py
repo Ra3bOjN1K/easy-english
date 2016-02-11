@@ -56,6 +56,7 @@ class UserForeignWord(models.Model):
 
     class Meta:
         db_table = 'ee_user_foreign_word'
+        unique_together = ('user', 'foreign_word', 'translation')
 
 
 class UserWordContext(models.Model):
