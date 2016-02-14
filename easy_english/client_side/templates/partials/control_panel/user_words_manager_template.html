@@ -4,7 +4,7 @@
         <i class="fa fa-database"></i>
     </a>
 
-    <div pageslide ps-open="vm.panel.isOpened" class="left-slide-panel" ps-side="left" ps-speed=".15"
+    <div pageslide ps-open="vm.panel.isOpened" class="left-slide-panel hidden-panel" ps-side="left" ps-speed=".15"
          ps-cloak="true" ps-size="800px">
         <a class="slide-panel__close-button" href="" ng-click="vm.panel.close()"><i class="fa fa-times"></i></a>
 
@@ -54,6 +54,7 @@
                                    ng-model="vm.actualWords.wordsPerPage" title=""
                                    ng-change="vm.actualWords.changeItemsPerPage()">
                         </div>
+                        <button class="anki-export" ng-click="vm.actualWords.exportCheckedToAnki()">Anki</button>
                         <uib-pagination total-items="vm.actualWords.totalWords" ng-model="vm.actualWords.currentPage"
                                         max-size="vm.actualWords.maxPageSize" class="pagination-sm"
                                         boundary-link-numbers="true" rotate="true" next-text="Туда"

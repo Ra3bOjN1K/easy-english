@@ -179,7 +179,8 @@ app.controller('VideoFilesManageCtrl', [
     }]);
 
 app.controller('UserWordsManagerCtrl', [
-    'UserService', 'UserDictionaryService', '$q', function (UserService, UserDictionaryService, $q) {
+    'UserService', 'UserDictionaryService', '$q', '$timeout', '$scope',
+    function (UserService, UserDictionaryService, $q, $timeout, $scope) {
         var vm = this;
 
         var DEFAULT_WORDS_PER_PAGE = 15;
@@ -206,9 +207,9 @@ app.controller('UserWordsManagerCtrl', [
             checkActualWord: onCheckActualWord,
             checkAllWords: onCheckAllActualWords,
             deleteWord: deleteActualWord,
-            sendWordToLearned: sendActualWordToLearned
+            sendWordToLearned: sendActualWordToLearned,
+            exportCheckedToAnki: exportCheckedToAnki
         };
-
 
         vm.isUserLoggedIn = function () {
             return UserService.hasToken()
@@ -220,24 +221,32 @@ app.controller('UserWordsManagerCtrl', [
             return date.isSame(today.format('YYYY-MM-DD'), 'day')
         };
 
+        function exportCheckedToAnki() {
+            UserDictionaryService.exportWordsToCsv(vm.actualWords.checkedList);
+        }
+
         function loadUserActualWords(currentPage, itemsPerPage) {
             var deferred = $q.defer();
             UserDictionaryService.getActualWords({
                 'target_page': currentPage,
                 'items_per_page': itemsPerPage
             }).then(function (result) {
-                vm.actualWords.totalWords = result.total_count;
-                vm.actualWords.list = angular.copy(result.foreign_words);
-                vm.actualWords.isLoaded = true;
-                markCheckedActualWords();
+                $timeout(function () {
+                    vm.actualWords.totalWords = result.total_count;
+                    vm.actualWords.list = angular.copy(result.foreign_words);
+                    vm.actualWords.isLoaded = true;
+                    markCheckedActualWords();
+                });
                 deferred.resolve(result)
             });
             return deferred.promise
         }
 
         function onActualWordsTabSelect() {
-            initActualWordsTab();
-            clearLearnedWordData();
+            $timeout(function () {
+                initActualWordsTab();
+                clearLearnedWordData();
+            }, 10);
         }
 
         function onChangeActualWordsPage() {
@@ -494,7 +503,6 @@ app.controller('UserWordsManagerCtrl', [
         }
 
         function openPanel() {
-            initActualWordsTab();
             vm.panel.isOpened = true;
         }
 

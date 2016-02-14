@@ -1,6 +1,7 @@
 import logging
 import datetime
 from django.contrib.auth.models import AnonymousUser
+from django.http import HttpResponse
 from django.views.generic import TemplateView
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -13,6 +14,7 @@ from easy_english.serializers import (TranslatorResultSerializer,
     SubtitleListSerializer, UserForeignWordSerializer,
     UserForeignWordListSerializer)
 from easy_english.services.auth import ExpiringTokenAuthentication
+from easy_english.services.file_exporters import UserWordsToCsvFileWriter
 from easy_english.services.subtitle.base import get_split_subtitles
 from easy_english.services.translator.base import get_translation
 from easy_english.services.user_dict import UserDictionary
@@ -23,7 +25,8 @@ JSON_CONTENT_TYPE = 'application/json'
 
 
 def is_user_authorized_inside_request(request):
-    return hasattr(request, 'user') and not isinstance(request.user, AnonymousUser)
+    return hasattr(request, 'user') and not isinstance(request.user,
+                                                       AnonymousUser)
 
 
 def check_authorized_user_inside_request(request):
@@ -134,6 +137,7 @@ class UserDictionaryView(ListCreateAPIView):
     LEARNED_WORDS = 'learned'
     ACTION_DELETE = 'delete'
     ACTION_SEND_TO_LEARNED = 'send_to_learned'
+    ACTION_ANKI_EXPORT = 'anki_export'
 
     def get(self, request, *args, **kwargs):
         check_authorized_user_inside_request(request)
@@ -173,10 +177,17 @@ class UserDictionaryView(ListCreateAPIView):
                 if action == self.ACTION_DELETE:
                     user_dict.delete_word_by_id(request.data.get('word_id'))
                     return Response(status=status.HTTP_200_OK)
-                if action == self.ACTION_SEND_TO_LEARNED:
-                    value = True if request.query_params.get('value') == 'true' else False
-                    user_dict.mark_word_is_learned(request.data.get('word_id'), value)
+                elif action == self.ACTION_SEND_TO_LEARNED:
+                    value = True if request.query_params.get(
+                        'value') == 'true' else False
+                    user_dict.mark_word_is_learned(request.data.get('word_id'),
+                                                   value)
                     return Response(status=status.HTTP_200_OK)
+                elif action == self.ACTION_ANKI_EXPORT:
+                    words_id_list = request.data.get('exported_ids', None)
+                    if words_id_list:
+                        return self._get_export_words_to_anki_response(
+                            request.user, words_id_list)
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
                 serializer = UserForeignWordSerializer(data=request.data)
@@ -187,3 +198,13 @@ class UserDictionaryView(ListCreateAPIView):
         except Exception as ex:
             logger.exception(ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def _get_export_words_to_anki_response(self, user, words_id_list):
+        response = HttpResponse(content_type='text/csv', charset='utf-8')
+        response[
+            'Content-Disposition'] = 'attachment; filename="anki_export.csv"'
+        writer = UserWordsToCsvFileWriter(response)
+        user_dict = UserDictionary(user)
+        words = user_dict.get_actual_words_by_id_list(words_id_list)
+        writer.write_user_word_list(words)
+        return response

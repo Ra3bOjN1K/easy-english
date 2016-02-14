@@ -135,6 +135,10 @@ body {
   background: url('/static/styles/img/debut_light_template.png') repeat left top;
   border-right: 1px solid #333;
   position: relative;
+
+  &.hidden-panel {
+    @include single-box-shadow(0, 0, 0, 0);
+  }
 }
 
 .slide-panel__close-button {

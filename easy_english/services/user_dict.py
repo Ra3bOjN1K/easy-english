@@ -51,6 +51,14 @@ class UserDictionary:
         start_idx = (page_num - 1) * items_per_page
         return total_count, words[start_idx:page_num * items_per_page]
 
+    def get_actual_words_by_id_list(self, list_of_id):
+        from easy_english.models import UserForeignWord
+        return UserForeignWord.objects.filter(
+            Q(is_learned=False) &
+            Q(user=self.user) &
+            Q(id__in=list_of_id)
+        ).order_by('-created').all()
+
     def get_all_words(self):
         from easy_english.models import UserForeignWord
         words = UserForeignWord.objects.all()

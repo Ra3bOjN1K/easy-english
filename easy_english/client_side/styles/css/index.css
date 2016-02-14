@@ -194,6 +194,11 @@ body:after {
   border-right: 1px solid #333;
   position: relative;
 }
+.left-slide-panel.hidden-panel {
+  -moz-box-shadow: 0 0 0 0 #333333;
+  -webkit-box-shadow: 0 0 0 0 #333333;
+  box-shadow: 0 0 0 0 #333333;
+}
 
 .slide-panel__close-button {
   color: #444;

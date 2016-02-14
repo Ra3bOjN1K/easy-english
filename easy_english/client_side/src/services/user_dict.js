@@ -61,6 +61,19 @@ app.factory('UserDictionaryService', [
                     deferred.reject(error);
                 });
                 return deferred.promise
+            },
+            exportWordsToCsv: function (wordIdList) {
+                var deferred = $q.defer();
+                _dictionaryService.post({exported_ids: wordIdList}, {action: 'anki_export'}).then(function (result) {
+                    var file = new Blob([result], {
+                        type: 'application/csv'
+                    });
+                    saveAs(file, 'anki_export.csv');
+                    deferred.resolve(result);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise
             }
         }
     }]);
