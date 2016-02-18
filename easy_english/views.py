@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from easy_english.serializers import (TranslatorResultSerializer,
     SubtitleSerializer, NewUserSerializer, AuthTokenSerializer,
     SubtitleListSerializer, UserForeignWordSerializer,
-    UserForeignWordListSerializer)
+    UserForeignWordListSerializer, SubtitleWordListSerializer)
 from easy_english.services.auth import ExpiringTokenAuthentication
 from easy_english.services.file_exporters import UserWordsToCsvFileWriter
 from easy_english.services.subtitle.base import get_split_subtitles
@@ -137,7 +137,11 @@ class UserDictionaryView(ListCreateAPIView):
     LEARNED_WORDS = 'learned'
     ACTION_DELETE = 'delete'
     ACTION_SEND_TO_LEARNED = 'send_to_learned'
+    ACTION_ADD_TO_LEARNED = 'add_word_to_learned'
+    ACTION_DEL_FROM_LEARNED = 'del_word_from_learned'
     ACTION_ANKI_EXPORT = 'anki_export'
+    ACTION_MARK_WORDS_EXPORTED = 'mark_exported'
+    ACTION_MARK_WORDS_STATUS = 'mark_words_status'
 
     def get(self, request, *args, **kwargs):
         check_authorized_user_inside_request(request)
@@ -183,11 +187,36 @@ class UserDictionaryView(ListCreateAPIView):
                     user_dict.mark_word_is_learned(request.data.get('word_id'),
                                                    value)
                     return Response(status=status.HTTP_200_OK)
+                elif action == self.ACTION_ADD_TO_LEARNED:
+                    user_dict.add_word_to_learned(request.data.get('word_name'))
+                    return Response(status=status.HTTP_200_OK)
+                elif action == self.ACTION_DEL_FROM_LEARNED:
+                    user_dict.del_word_from_learned(request.data.get('word_name'))
+                    return Response(status=status.HTTP_200_OK)
                 elif action == self.ACTION_ANKI_EXPORT:
                     words_id_list = request.data.get('exported_ids', None)
                     if words_id_list:
                         return self._get_export_words_to_anki_response(
                             request.user, words_id_list)
+                elif action == self.ACTION_MARK_WORDS_EXPORTED:
+                    words_id_list = request.data.get('exported_ids', None)
+                    if words_id_list:
+                        user_dict = UserDictionary(request.user)
+                        user_dict.mark_actual_words_exported(words_id_list)
+                        return Response(status=status.HTTP_200_OK)
+                elif action == self.ACTION_MARK_WORDS_STATUS:
+                    word_list = request.data.get('words', None)
+                    if word_list:
+                        user_dict = UserDictionary(request.user)
+                        serializer = SubtitleWordListSerializer(data=word_list)
+                        if serializer.is_valid(raise_exception=True):
+                            word_list = serializer.data
+                            marked_words = user_dict.mark_words_status(word_list)
+                            serializer = SubtitleWordListSerializer(marked_words)
+                            return Response(
+                                data=serializer.data,
+                                status=status.HTTP_200_OK
+                            )
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             else:
                 serializer = UserForeignWordSerializer(data=request.data)

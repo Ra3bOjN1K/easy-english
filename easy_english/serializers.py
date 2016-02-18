@@ -154,3 +154,18 @@ class UserForeignWordListSerializer(serializers.Serializer):
     foreign_words = serializers.ListSerializer(
         child=UserForeignWordSerializer()
     )
+
+
+class SubtitleWordSerializer(serializers.Serializer):
+    word = serializers.CharField(max_length=120)
+    counter = serializers.IntegerField()
+    subtitleIdList = serializers.ListField(
+        child=serializers.IntegerField()
+    )
+    is_added = serializers.BooleanField(default=False)
+    is_exported = serializers.BooleanField(default=False)
+    is_learned = serializers.BooleanField(default=False)
+
+
+class SubtitleWordListSerializer(serializers.ListSerializer):
+    child = SubtitleWordSerializer()

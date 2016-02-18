@@ -1,0 +1,102 @@
+<div ng-controller="NewWordsSelectionCtrl as vm" class="slide-panel-wrapper">
+
+    <a class="control-panel-button movie-words" ng-if="vm.isUserLoggedIn() && vm.engSubtitlesWasLoaded()" href=""
+       ng-click="vm.panel.open()">
+        <i class="fa fa-binoculars"></i>
+    </a>
+
+    <div pageslide ps-open="vm.panel.isOpened" class="left-slide-panel hidden-panel" ps-side="left" ps-speed=".15"
+         ps-cloak="true" ps-size="800px">
+        <a class="slide-panel__close-button" href="" ng-click="vm.panel.close()"><i class="fa fa-times"></i></a>
+
+        <div class="slide-panel-data-container" ng-if="vm.panel.isOpened">
+            <div class="words-selection-box">
+                <div class="subtitles-limiter">
+                    <div class="container-header">Выбор отрезка фильма</div>
+                    <div class="limiter-content">
+                        <div class="limiter-body" subtitles-limiter-slider
+                             sub-lim-start="vm.subtitlesLimit.start" sub-lim-end="vm.subtitlesLimit.end"></div>
+                        <a class="limiter-apply" ng-click="vm.subtitlesLimit.apply()"><i class="fa fa-check"></i></a>
+                    </div>
+                </div>
+                <div class="words-list">
+                    <div class="container-header">Слова из фильма</div>
+                    <div class="words-list-body">
+                        <uib-tabset justified="true">
+                            <uib-tab heading="Новые" active="true" select="vm.tab.onTabSelect(vm.NEW_WORDS_TAB)">
+                                <div class="words-wrapper" ng-if="vm.tab.name === vm.NEW_WORDS_TAB">
+                                    <div class="word" ng-repeat="word in vm.tab.newWordList"
+                                         ng-click="vm.words.onSelectWord(word)"
+                                         ng-class="{'selected-word': vm.words.selectedWord.word === word.word}">
+                                        <div class="word-counter">{{ word.counter }}</div>
+                                        <div class="word-name">{{ word.word }}</div>
+                                        <a class="learned-word-btn"
+                                           ng-click="vm.addWordToLearned(word); $event.stopPropagation();"><i class="fa fa-trash"></i></a>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                            <uib-tab heading="Из словаря" select="vm.tab.onTabSelect(vm.DICT_WORDS_TAB)">
+                                <div class="words-wrapper" ng-if="vm.tab.name === vm.DICT_WORDS_TAB">
+                                    <div class="word" ng-repeat="word in vm.tab.wordsFromDict"
+                                         ng-click="vm.words.onSelectWord(word)"
+                                         ng-class="{'selected-word': vm.words.selectedWord.word === word.word}">
+                                        <div class="word-counter">{{ word.counter }}</div>
+                                        <div class="word-name">{{ word.word }}</div>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                            <uib-tab heading="Замученные" select="vm.tab.onTabSelect(vm.LEARNED_WORDS_TAB)">
+                                <div class="words-wrapper" ng-if="vm.tab.name === vm.LEARNED_WORDS_TAB">
+                                    <div class="word" ng-repeat="word in vm.tab.learnedWords"
+                                         ng-click="vm.words.onSelectWord(word)"
+                                         ng-class="{'selected-word': vm.words.selectedWord.word === word.word}">
+                                        <div class="word-counter">{{ word.counter }}</div>
+                                        <div class="word-name">{{ word.word }}</div>
+                                        <a class="repaired-word-btn"
+                                           ng-click="vm.delWordFromLearned(word); $event.stopPropagation();"><i class="fa fa-reply"></i></a>
+                                    </div>
+                                </div>
+                            </uib-tab>
+                        </uib-tabset>
+                    </div>
+                </div>
+            </div>
+            <div class="word-info-box">
+                <div class="word-translations">
+                    <div class="container-header">Варианты перевода</div>
+                    <div class="word-translations-wrapper">
+                        <div class="word-translation" ng-if="vm.words.selectedWordTranslation"
+                             ng-repeat="tr in vm.words.selectedWordTranslation.translations">
+                            <div class="word-translation-name">{{ tr.word }}</div>
+                            <div class="word-translation-rate" word-votes-handler ng-cloak="">{{ tr.votes }}</div>
+                            <a class="save-btn" ng-if="vm.isUserLoggedIn() && !tr.is_added"
+                               ng-click="vm.addUserWord(tr)"
+                               ng-class="{'hidden': !vm.selectedWordHasCheckedContexts}">
+                                <img src="/static/styles/img/add.png">
+                            </a>
+                            <a class="save-btn disabled-btn" ng-if="vm.isUserLoggedIn() && tr.is_added"
+                               ng-class="{'hidden': !vm.selectedWordHasCheckedContexts}">
+                                <img src="/static/styles/img/ok.png">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="warning-msg"
+                         ng-if="!vm.selectedWordHasCheckedContexts && vm.words.selectedWordContests.length > 0">
+                        Выберите контекст, прежде чем добавить слово в словарь!
+                    </div>
+                </div>
+                <div class="word-contexts">
+                    <div class="container-header">Список контекстов к слову</div>
+                    <div class="word-contexts-wrapper">
+                        <div class="word-context" ng-repeat="context in vm.words.selectedWordContests">
+                            <input type="checkbox" ng-model="context.isChecked" title=""
+                                   ng-change="vm.onContextCheck()">
+
+                            <div class="word-context-body" ng-bind-html="context.text"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

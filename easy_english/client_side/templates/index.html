@@ -12,10 +12,14 @@
     <link href="http://vjs.zencdn.net/5.0/video-js.min.css" rel="stylesheet">
     <link href="{% static "vendors/css/bootstrap.min.css" %}" rel="stylesheet">
     <link href="{% static "vendors/css/hotkeys.min.css" %}" rel="stylesheet">
+    <link href="{% static "vendors/css/jquery-ui.min.css" %}" rel="stylesheet">
+    <link href="{% static "vendors/css/jquery-ui.structure.min.css" %}" rel="stylesheet">
+    <link href="{% static "vendors/css/jquery-ui.theme.min.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/index.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/video_files_panel.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/auth_panel.css" %}" rel="stylesheet">
     <link href="{% static "styles/css/user_words_manager.css" %}" rel="stylesheet">
+    <link href="{% static "styles/css/new_words_selection.css" %}" rel="stylesheet">
 
     <title>Easy English</title>
 
@@ -33,6 +37,7 @@
         <div ng-include="'/static/templates/partials/control_panel/authorisation_template.html'"></div>
         <div ng-include="'/static/templates/partials/control_panel/video_files_manage_template.html'"></div>
         <div ng-include="'/static/templates/partials/control_panel/user_words_manager_template.html'"></div>
+        <div ng-include="'/static/templates/partials/control_panel/new_words_selection_template.html'"></div>
     </div>
 
     <div ng-controller="VideoPlayerCtrl" class="player-things" video-player-auto-size
@@ -58,17 +63,19 @@
 </script>
 {% endverbatim %}
 
+<script type="text/javascript" src="{% static "vendors/js/jquery-ui.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/moment-with-locales.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/angular-pageslide-directive.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/ngStorage.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/angular-animate.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/angular-messages.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/angular-sanitize.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/api-check.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/formly.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/angular-formly-templates-bootstrap.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/lodash.compat.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/restangular.min.js" %}"></script>
-<script type="text/javascript" src="{% static "vendors/js/ui-bootstrap-tpls-1.1.2.min.js" %}"></script>
+<script type="text/javascript" src="{% static "vendors/js/ui-bootstrap-tpls-0.14.2.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/hotkeys.min.js" %}"></script>
 <script type="text/javascript" src="{% static "vendors/js/FileSaver.min.js" %}"></script>
 <script src="http://vjs.zencdn.net/5.0/video.min.js"></script>
@@ -78,6 +85,7 @@
 <script type="text/javascript" src="{% static "src/controllers/control_panel.js" %}"></script>
 <script type="text/javascript" src="{% static "src/controllers/player.js" %}"></script>
 <script type="text/javascript" src="{% static "src/directives/player.js" %}"></script>
+<script type="text/javascript" src="{% static "src/directives/control_panel.js" %}"></script>
 <script type="text/javascript" src="{% static "src/models/player.js" %}"></script>
 <script type="text/javascript" src="{% static "src/services/subtitles_handler.js" %}"></script>
 <script type="text/javascript" src="{% static "src/services/dictionary_serv.js" %}"></script>

@@ -55,7 +55,28 @@ app.factory('UserDictionaryService', [
             },
             markWordIsLearned: function (wordId, isLearned) {
                 var deferred = $q.defer();
-                _dictionaryService.post({word_id: wordId}, {action: 'send_to_learned', value: isLearned}).then(function (result) {
+                _dictionaryService.post({word_id: wordId}, {
+                    action: 'send_to_learned',
+                    value: isLearned
+                }).then(function (result) {
+                    deferred.resolve(result);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise
+            },
+            addWordToLearned: function (wordName) {
+                var deferred = $q.defer();
+                _dictionaryService.post({word_name: wordName}, {action: 'add_word_to_learned'}).then(function (result) {
+                    deferred.resolve(result);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise
+            },
+            delWordFromLearned: function (wordName) {
+                var deferred = $q.defer();
+                _dictionaryService.post({word_name: wordName}, {action: 'del_word_from_learned'}).then(function (result) {
                     deferred.resolve(result);
                 }, function (error) {
                     deferred.reject(error);
@@ -69,6 +90,24 @@ app.factory('UserDictionaryService', [
                         type: 'application/csv'
                     });
                     saveAs(file, 'anki_export.csv');
+                    deferred.resolve(result);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise
+            },
+            markExportedWords: function (wordIdList) {
+                var deferred = $q.defer();
+                _dictionaryService.post({exported_ids: wordIdList}, {action: 'mark_exported'}).then(function (result) {
+                    deferred.resolve(result);
+                }, function (error) {
+                    deferred.reject(error);
+                });
+                return deferred.promise
+            },
+            markWordsStatus: function (wordList) {
+                var deferred = $q.defer();
+                _dictionaryService.post({words: wordList}, {action: 'mark_words_status'}).then(function (result) {
                     deferred.resolve(result);
                 }, function (error) {
                     deferred.reject(error);

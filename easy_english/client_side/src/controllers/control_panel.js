@@ -198,14 +198,16 @@ app.controller('UserWordsManagerCtrl', [
             isAllWordsChecked: false,
             isLoaded: false,
             maxPageSize: 4,
-            currentPage: DEFAULT_CURRENT_PAGE,
+            currentPage: 1,
             totalWords: 1,
             wordsPerPage: DEFAULT_WORDS_PER_PAGE,
             onTabSelect: onActualWordsTabSelect,
             changePage: onChangeActualWordsPage,
             changeItemsPerPage: onChangeActualWordsItemsPerPage,
+            hasCheckedActualWords: hasCheckedActualWords,
             checkActualWord: onCheckActualWord,
             checkAllWords: onCheckAllActualWords,
+            markExportedWords: markExportedWords,
             deleteWord: deleteActualWord,
             sendWordToLearned: sendActualWordToLearned,
             exportCheckedToAnki: exportCheckedToAnki
@@ -225,6 +227,13 @@ app.controller('UserWordsManagerCtrl', [
             UserDictionaryService.exportWordsToCsv(vm.actualWords.checkedList);
         }
 
+        // toggle marker
+        function markExportedWords() {
+            UserDictionaryService.markExportedWords(vm.actualWords.checkedList).then(function () {
+                loadUserActualWords(vm.actualWords.currentPage, vm.actualWords.wordsPerPage);
+            });
+        }
+
         function loadUserActualWords(currentPage, itemsPerPage) {
             var deferred = $q.defer();
             UserDictionaryService.getActualWords({
@@ -232,7 +241,7 @@ app.controller('UserWordsManagerCtrl', [
                 'items_per_page': itemsPerPage
             }).then(function (result) {
                 $timeout(function () {
-                    vm.actualWords.totalWords = result.total_count;
+                    vm.actualWords.totalWords = parseInt(result.total_count);
                     vm.actualWords.list = angular.copy(result.foreign_words);
                     vm.actualWords.isLoaded = true;
                     markCheckedActualWords();
@@ -246,7 +255,7 @@ app.controller('UserWordsManagerCtrl', [
             $timeout(function () {
                 initActualWordsTab();
                 clearLearnedWordData();
-            }, 10);
+            }, 100);
         }
 
         function onChangeActualWordsPage() {
@@ -256,6 +265,14 @@ app.controller('UserWordsManagerCtrl', [
         function onChangeActualWordsItemsPerPage() {
             vm.actualWords.currentPage = DEFAULT_CURRENT_PAGE;
             loadUserActualWords(vm.actualWords.currentPage, vm.actualWords.wordsPerPage);
+        }
+
+        function hasCheckedActualWords() {
+            var res = false;
+            angular.forEach(vm.actualWords.checkedList, function (w) {
+                res = true;
+            });
+            return res;
         }
 
         function markCheckedActualWords() {
@@ -381,8 +398,8 @@ app.controller('UserWordsManagerCtrl', [
                 'target_page': currentPage,
                 'items_per_page': itemsPerPage
             }).then(function (result) {
-                vm.learnedWords.totalWords = result.total_count;
                 vm.learnedWords.list = angular.copy(result.foreign_words);
+                vm.learnedWords.totalWords = result.total_count;
                 vm.learnedWords.isLoaded = true;
                 markCheckedLearnedWords();
                 deferred.resolve(result)
@@ -510,5 +527,240 @@ app.controller('UserWordsManagerCtrl', [
             vm.panel.isOpened = false;
             clearActualWordData();
             clearLearnedWordData();
+        }
+    }]);
+
+app.controller('NewWordsSelectionCtrl', [
+    'UserService', 'SubtitlesContainerService', 'SubtitlesSeparatorService', 'DictionaryService', 'UserDictionaryService',
+    '$timeout', '$sanitize',
+    function (UserService, SubtitlesContainerService, SubtitlesSeparatorService, DictionaryService, UserDictionaryService,
+              $timeout, $sanitize) {
+        var vm = this;
+
+        vm.panel = {
+            isOpened: false,
+            open: openPanel,
+            close: closePanel
+        };
+
+        vm.subtitlesLimit = {
+            start: 0,
+            end: 0,
+            apply: applySubtitlesLimit
+        };
+
+        vm.NEW_WORDS_TAB = 'newWords';
+        vm.DICT_WORDS_TAB = 'wordsFromDict';
+        vm.LEARNED_WORDS_TAB = 'learnedWords';
+
+        vm.tab = {
+            name: null,
+            newWordList: [],
+            wordsFromDict: [],
+            learnedWords: [],
+            onTabSelect: onTabSelect
+        };
+
+        vm.words = {
+            list: [],
+            selectedWord: {},
+            selectedWordContests: [],
+            selectedWordTranslation: {},
+            onSelectWord: onSelectWord
+        };
+
+        vm.selectedWordHasCheckedContexts = false;
+        vm.isUserLoggedIn = function () {return UserService.hasToken()};
+        vm.engSubtitlesWasLoaded = function () {return SubtitlesContainerService.isEngSubtitlesSet()};
+        vm.addUserWord = addUserWord;
+        vm.onContextCheck = onContextCheck;
+        vm.addWordToLearned = addWordToLearned;
+        vm.delWordFromLearned = delWordFromLearned;
+
+        function onTabSelect(tabName) {
+            vm.tab.name = tabName;
+            $timeout(function () {
+                clearTabs();
+                vm.words.selectedWord = {};
+                vm.words.selectedWordContests = [];
+                vm.words.selectedWordTranslation = {};
+                initSelectedTab();
+            });
+        }
+
+        function initSelectedTab() {
+            if (vm.words.list.length > 0) {
+                if (vm.tab.name === vm.NEW_WORDS_TAB) {
+                    vm.tab.newWordList = filterNewWordsOnly(vm.words.list);
+                }
+                else if (vm.tab.name === vm.DICT_WORDS_TAB) {
+                    vm.tab.wordsFromDict = filterWordsFromUserDictOnly(vm.words.list);
+                }
+                else if (vm.tab.name === vm.LEARNED_WORDS_TAB) {
+                    vm.tab.learnedWords = filterLearnedWordsOnly(vm.words.list);
+                }
+                vm.words.selectedWord = {};
+                vm.words.selectedWordTranslation = {};
+                vm.words.selectedWordContests = [];
+            }
+        }
+
+        function filterNewWordsOnly(wordList) {
+            var newWords = [];
+            angular.forEach(wordList, function (word) {
+                if (!word.is_added) {
+                    newWords.push(word);
+                }
+            });
+            return newWords;
+        }
+
+        function filterWordsFromUserDictOnly(wordList) {
+            var words = [];
+            angular.forEach(wordList, function (word) {
+                if (word.is_added && !word.is_learned) {
+                    words.push(word);
+                }
+            });
+            return words;
+        }
+
+        function filterLearnedWordsOnly(wordList) {
+            var words = [];
+            angular.forEach(wordList, function (word) {
+                if (word.is_added && word.is_learned) {
+                    words.push(word);
+                }
+            });
+            return words;
+        }
+
+        function addWordToLearned(word) {
+            UserDictionaryService.addWordToLearned(word.word).then(function () {
+                angular.forEach(vm.words.list, function (w, idx) {
+                    if (angular.equals(w.word, word.word)) {
+                        vm.words.list[idx].is_learned = true;
+                        vm.words.list[idx].is_added = true;
+                    }
+                });
+                initSelectedTab();
+            })
+        }
+
+        function delWordFromLearned(word) {
+            UserDictionaryService.delWordFromLearned(word.word).then(function () {
+                angular.forEach(vm.words.list, function (w, idx) {
+                    if (angular.equals(w.word, word.word)) {
+                        vm.words.list[idx].is_learned = false;
+                        vm.words.list[idx].is_added = false;
+                    }
+                });
+                initSelectedTab();
+            })
+        }
+
+        function clearTabs() {
+            vm.tab.newWordList = [];
+            vm.tab.wordsFromDict = [];
+            vm.tab.learnedWords = [];
+        }
+
+        function onSelectWord(word) {
+            vm.words.selectedWordContests = [];
+            vm.words.selectedWordTranslation = {};
+            vm.selectedWordHasCheckedContexts = false;
+            vm.words.selectedWord = word;
+            $timeout(function () {
+                setContextsForSelectedWord(SubtitlesContainerService.getEngSubtitles(), word);
+            });
+            $timeout(function () {
+                setTranslationsForSelectedWord(word);
+            })
+        }
+
+        function addUserWord(translation) {
+            var word = {
+                foreign_word: vm.words.selectedWord.word,
+                translation: translation.word,
+                votes: translation.votes,
+                contexts: getCheckedContextsText()
+            };
+
+            UserDictionaryService.addNewWord(word).then(function () {
+                angular.forEach(vm.words.selectedWordTranslation.translations, function (tr, idx) {
+                    if (angular.equals(translation.word, tr.word)) {
+                        vm.words.selectedWordTranslation.translations[idx].is_added = true;
+                    }
+                });
+                angular.forEach(vm.words.list, function (w, idx) {
+                    if (angular.equals(w.word, word.foreign_word)) {
+                        vm.words.list[idx].is_added = true;
+                    }
+                });
+                initSelectedTab();
+            })
+        }
+
+        function getCheckedContextsText() {
+            var contexts = [];
+            angular.forEach(vm.words.selectedWordContests, function (context) {
+                if (context.isChecked) {
+                    contexts.push(context.text);
+                }
+            });
+            return contexts;
+        }
+
+        function onContextCheck() {
+            vm.selectedWordHasCheckedContexts = getCheckedContextsText().length > 0;
+        }
+
+        function setContextsForSelectedWord(subtitles, word) {
+            vm.words.selectedWordContests = [];
+            angular.forEach(SubtitlesSeparatorService.findContextsForWord(subtitles, word), function (context) {
+                vm.words.selectedWordContests.push({isChecked: false, text: $sanitize(context)});
+            })
+        }
+
+        function setTranslationsForSelectedWord(selectedWord) {
+            DictionaryService.translate({origText: selectedWord.word}).then(function (translation) {
+                vm.words.selectedWordTranslation = translation;
+            });
+        }
+
+        function setInitialSubtitlesLimits() {
+            var subList = SubtitlesContainerService.getEngSubtitles();
+            var firstSubtitle = subList[0];
+            var lastSubtitle = subList[subList.length - 1];
+            vm.subtitlesLimit.start = firstSubtitle.start;
+            vm.subtitlesLimit.end = lastSubtitle.end;
+        }
+
+        function applySubtitlesLimit() {
+            var limitedSubtitles = SubtitlesContainerService.getSubtitlesLimitedByTime(
+                vm.subtitlesLimit.start, vm.subtitlesLimit.end);
+            var wordList = SubtitlesSeparatorService.separateSubtitlesToWords(limitedSubtitles);
+            UserDictionaryService.markWordsStatus(wordList).then(function (words) {
+                vm.words.list = words;
+                initSelectedTab();
+            });
+        }
+
+        function clearData() {
+            clearTabs();
+            vm.words.list = [];
+            vm.words.selectedWordContests = [];
+            vm.words.selectedWord = {};
+            vm.words.selectedWordTranslation = {};
+        }
+
+        function openPanel() {
+            vm.panel.isOpened = true;
+            setInitialSubtitlesLimits();
+        }
+
+        function closePanel() {
+            clearData();
+            vm.panel.isOpened = false;
         }
     }]);

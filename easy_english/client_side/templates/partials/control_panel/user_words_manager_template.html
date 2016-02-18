@@ -14,7 +14,7 @@
                     <div class="words-container">
                         <div class="word-wrapper-header">
                             <input type="checkbox" title="" ng-model="vm.actualWords.isAllWordsChecked"
-                            ng-change="vm.actualWords.checkAllWords()">
+                                   ng-change="vm.actualWords.checkAllWords()">
                             <span class="orig-word"></span>
                             <span class="translated-word"></span>
                         </div>
@@ -26,12 +26,14 @@
                                  ng-if="vm.actualWords.list && vm.actualWords.isLoaded">
                                 <div class="indicators">
                                     <div class="added-today"
-                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N</div>
+                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N
+                                    </div>
                                     <div class="exported" ng-class="{'ind-disable': !word.is_exported}">E</div>
                                 </div>
                                 <div class="word-wrapper">
                                     <input type="checkbox" class="word-checker" title="" ng-model="word.isChecked"
                                            ng-change="vm.actualWords.checkActualWord(word)">
+
                                     <div class="orig-word">{{ word.foreign_word }}</div>
                                     <div class="translated-word">{{ word.translation }}</div>
                                     <div class="word-control">
@@ -50,11 +52,16 @@
                     <div class="pagination-block">
                         <div class="num-items-per-page">
                             <span>Кол-во строк: </span>
-                            <input type="number" value="{{ vm.actualWords.wordsPerPage }}" min="15" max="100" step="5"
+                            <input type="number" value="{{ vm.actualWords.wordsPerPage }}" min="5" max="100" step="5"
                                    ng-model="vm.actualWords.wordsPerPage" title=""
                                    ng-change="vm.actualWords.changeItemsPerPage()">
                         </div>
-                        <button class="anki-export" ng-click="vm.actualWords.exportCheckedToAnki()">Anki</button>
+                        <div class="export-block">
+                            <a class="anki-export" ng-class="{'hidden': !vm.actualWords.hasCheckedActualWords()}"
+                               ng-click="vm.actualWords.exportCheckedToAnki()"><img src="/static/styles/img/anki.png"></a>
+                            <a class="mark-exported" ng-class="{'hidden': !vm.actualWords.hasCheckedActualWords()}"
+                               ng-click="vm.actualWords.markExportedWords()">E</a>
+                        </div>
                         <uib-pagination total-items="vm.actualWords.totalWords" ng-model="vm.actualWords.currentPage"
                                         max-size="vm.actualWords.maxPageSize" class="pagination-sm"
                                         boundary-link-numbers="true" rotate="true" next-text="Туда"
@@ -72,24 +79,28 @@
                             <span class="translated-word"></span>
                         </div>
                         <div class="words-list">
-                            <div class="empty-word-list" ng-if="!vm.learnedWords.list.length && vm.learnedWords.isLoaded">
+                            <div class="empty-word-list"
+                                 ng-if="!vm.learnedWords.list.length && vm.learnedWords.isLoaded">
                                 В Вашем словаре пока нет изученных слов.. =((
                             </div>
                             <div ng-repeat="word in vm.learnedWords.list"
                                  ng-if="vm.learnedWords.list && vm.learnedWords.isLoaded">
                                 <div class="indicators">
                                     <div class="added-today"
-                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N</div>
+                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N
+                                    </div>
                                     <div class="exported" ng-class="{'ind-disable': !word.is_exported}">E</div>
                                 </div>
                                 <div class="word-wrapper">
                                     <input type="checkbox" class="word-checker" title="" ng-model="word.isChecked"
                                            ng-change="vm.learnesWords.checkActualWord(word)">
+
                                     <div class="orig-word">{{ word.foreign_word }}</div>
                                     <div class="translated-word">{{ word.translation }}</div>
                                     <div class="word-control">
                                         <a class="undo-btn"
-                                           ng-click="vm.learnedWords.sendWordToActual(word.id)">
+                                           ng-click="vm.learnedWords.sendWordToActual(word.id)"
+                                           ng-if="word.translation.length > 0">
                                             <img src="/static/styles/img/undo.png">
                                         </a>
                                         <a class="del-btn" ng-click="vm.learnedWords.deleteWord(word.id)">

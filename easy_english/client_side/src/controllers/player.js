@@ -1,8 +1,10 @@
 var app = angular.module('EnglishMoviesSchool');
 
 app.controller('VideoPlayerCtrl', [
-    '$rootScope', '$scope', '$timeout', '$document', '$sce', 'PlayerService', 'SubtitlesParserService', 'hotkeys', 'DictionaryService', 'TranslatorDialog',
-    function ($rootScope, $scope, $timeout, $document, $sce, PlayerService, SubtitlesParserService, hotkeys, DictionaryService, TranslatorDialog) {
+    '$rootScope', '$scope', '$timeout', '$document', '$sce', 'PlayerService', 'SubtitlesParserService', 'hotkeys',
+    'DictionaryService', 'TranslatorDialog', 'SubtitlesContainerService',
+    function ($rootScope, $scope, $timeout, $document, $sce, PlayerService, SubtitlesParserService, hotkeys,
+              DictionaryService, TranslatorDialog, SubtitlesContainerService) {
 
         $scope.player = {
             id: 'video-player',
@@ -43,6 +45,7 @@ app.controller('VideoPlayerCtrl', [
                 SubtitlesParserService.getSubtitlesList(file).then(function (subtitleList) {
                     SubtitlesParserService.splitSubtitlesIntoWords(subtitleList).then(function (subList) {
                         $scope.subtitles.engList = subList;
+                        SubtitlesContainerService.setEngSubtitles(subtitleList);
                     })
                 })
             }
