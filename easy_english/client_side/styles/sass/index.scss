@@ -4,6 +4,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
   padding: 0;
 }
 
@@ -34,6 +35,23 @@ body {
 
 ::-moz-selection {
   background: #90C3D4; /* Firefox */
+}
+
+.non-chrome-window {
+  @include init-flex-position(row);
+  @include justify-content(center);
+  @include align-items(center);
+  @include flex(1 1);
+  background: #f6f6f6;
+  color: #aaa;
+  font-size: 18pt;
+  font-weight: bolder;
+
+  img {
+    height: 32px;
+    margin-right: 4px;
+    width: auto;
+  }
 }
 
 .page-content {
@@ -165,6 +183,8 @@ body {
   @include justify-content(center);
   @include align-items(center);
   @include flex(1 1);
+  padding-bottom: 25px;
+  padding-top: 30px;
   position: relative;
 
   .video-file-name {
@@ -469,6 +489,27 @@ body {
 
 .translated-word-item:hover {
   background: #eee;
+}
+
+.ee-top-tooltip {
+  &.tooltip.in {
+    opacity: 1;
+  }
+
+  .tooltip-arrow,
+  .tooltip-inner {
+    color: #777;
+  }
+
+  .tooltip-arrow {
+    border-top-color: #999 !important;
+  }
+
+  .tooltip-inner {
+    @include single-box-shadow(.5px, .5px, 2px, .1px, #ccc);
+    background: #fff;
+    border: 1px solid #999;
+  }
 }
 
 .hidden {

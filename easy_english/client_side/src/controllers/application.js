@@ -2,6 +2,8 @@ var app = angular.module('EnglishMoviesSchool');
 
 app.controller('ApplicationCtrl', ['$rootScope', '$scope', function ($rootScope, $scope) {
 
+    //$scope.isBrowserChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+    $scope.isBrowserChrome = true;
     $scope.onCloseVideoFileDialog = onCloseVideoFileDialog;
     $scope.onCloseEngSubtitlesDialog = onCloseEngSubtitlesDialog;
     $scope.onCloseRusSubtitlesDialog = onCloseRusSubtitlesDialog;

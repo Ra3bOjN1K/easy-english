@@ -1,8 +1,22 @@
+.user-words-block li > a {
+  border-bottom-color: #ccc;
+}
+.user-words-block .nav-tabs .active a,
+.user-words-block .nav-tabs .active a:hover,
+.user-words-block .nav-tabs .active a:focus,
+.user-words-block .nav-tabs .active a:active {
+  background: #fcfcfc;
+  border-color: #ccc;
+  border-bottom: 1px solid #fcfcfc;
+}
 .user-words-block .tab-pane {
   background: #fff;
-  border: 1px solid #ddd;
+  border: 1px solid #ccc;
   border-top-width: 0;
   padding: 12px;
+}
+.user-words-block .tab-pane.active {
+  background: #fcfcfc;
 }
 .user-words-block .words-container {
   display: -moz-box;
@@ -86,10 +100,13 @@
   width: 17px;
 }
 .user-words-block .word-wrapper {
+  -moz-box-shadow: 0.5px 0.5px 3px 0.05px #eee;
+  -webkit-box-shadow: 0.5px 0.5px 3px 0.05px #eee;
+  box-shadow: 0.5px 0.5px 3px 0.05px #eee;
   -webkit-flex: 1 1;
   flex: 1 1;
-  background: #fcfcfc;
-  border: 1px solid #dedede;
+  background: #fff;
+  border: 1px solid #d6d6d6;
   border-radius: 2px;
   margin: 2px;
   position: relative;
@@ -189,7 +206,7 @@
   border: 1px solid #c95050;
 }
 .user-words-block .word-control .mark-learned-btn {
-  border: 1px solid #58c950;
+  border: 1px solid #178A49;
 }
 .user-words-block .word-control .undo-btn {
   border: 1px solid #eea236;

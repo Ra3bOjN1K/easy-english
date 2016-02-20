@@ -2,6 +2,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
   padding: 0;
 }
 
@@ -40,6 +41,34 @@ body:after {
 ::-moz-selection {
   background: #90C3D4;
   /* Firefox */
+}
+
+.non-chrome-window {
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  display: -ms-flexbox;
+  -ms-flex-direction: row;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-flex: 1 1;
+  flex: 1 1;
+  background: #f6f6f6;
+  color: #aaa;
+  font-size: 18pt;
+  font-weight: bolder;
+}
+.non-chrome-window img {
+  height: 32px;
+  margin-right: 4px;
+  width: auto;
 }
 
 .page-content {
@@ -234,6 +263,8 @@ body:after {
   align-items: center;
   -webkit-flex: 1 1;
   flex: 1 1;
+  padding-bottom: 25px;
+  padding-top: 30px;
   position: relative;
 }
 .player-things .video-file-name {
@@ -628,6 +659,24 @@ body:after {
 
 .translated-word-item:hover {
   background: #eee;
+}
+
+.ee-top-tooltip.tooltip.in {
+  opacity: 1;
+}
+.ee-top-tooltip .tooltip-arrow,
+.ee-top-tooltip .tooltip-inner {
+  color: #777;
+}
+.ee-top-tooltip .tooltip-arrow {
+  border-top-color: #999 !important;
+}
+.ee-top-tooltip .tooltip-inner {
+  -moz-box-shadow: 0.5px 0.5px 2px 0.1px #ccc;
+  -webkit-box-shadow: 0.5px 0.5px 2px 0.1px #ccc;
+  box-shadow: 0.5px 0.5px 2px 0.1px #ccc;
+  background: #fff;
+  border: 1px solid #999;
 }
 
 .hidden {

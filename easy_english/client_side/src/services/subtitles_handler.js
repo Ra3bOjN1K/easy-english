@@ -190,7 +190,7 @@ app.factory('SubtitlesSeparatorService', [function () {
                         }
                         else {
                             var wordVal = wordItemsDict[key];
-                            if (wordVal.subtitleIdList.indexOf(subtitle.id) === -1) {
+                            if (!!wordVal && !!wordVal.subtitleIdList && wordVal.subtitleIdList.indexOf(subtitle.id) === -1) {
                                 wordVal.subtitleIdList.push(subtitle.id);
                                 wordVal.counter += 1;
                                 wordItemsDict[key] = wordVal;

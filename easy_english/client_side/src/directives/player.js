@@ -7,11 +7,11 @@ app.directive('videoPlayerAutoSize', ['PlayerService', '$document', '$timeout', 
             function _getOptimalSize() {
                 var playerThings = $($document).find('.player-things');
 
-                var targetWidth = parseInt(playerThings.width() * 0.82);
+                var targetWidth = parseInt(playerThings.width() * 0.9);
                 var targetHeight = parseInt(targetWidth * 9 / 16);
 
                 if (targetHeight * 1.05 > playerThings.height()) {
-                    targetHeight = parseInt(playerThings.height() * 0.82);
+                    targetHeight = parseInt(playerThings.height() * 0.95);
                     targetWidth = parseInt(targetHeight * 16 / 9);
                 }
 

@@ -13,11 +13,42 @@
     font-size: 10pt;
     min-height: 20px;
   }
+
+  .preview-msg {
+    @include single-box-shadow(.5px, .5px, 4px, .05px, #eee);
+    background: #fff;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    color: #969696;
+    font-size: 11pt;
+    margin: 0 12px;
+    padding: 12px;
+    position: absolute;
+    text-align: center;
+    top: 30%;
+  }
+
+  .loading {
+    @include init-flex-position(row);
+    @include justify-content(center);
+    @include align-content(center);
+    box-sizing: border-box;
+    position: absolute;
+    text-align: center;
+    top: 36%;
+    width: 100%;
+
+    img {
+      height: 48px;
+      opacity: .6;
+      width: auto;
+    }
+  }
 }
 
 .words-selection-box {
   @include init-flex-position(column);
-  height: 640px;
+  height: 646px;
   width: 360px;
 
   .subtitles-limiter {
@@ -82,9 +113,10 @@
   .words-list-body {
     @include init-flex-position(column);
     @include flex(1 1);
-    background: #ececec;
+    background: #efefef;
     border: 1px solid #ccc;
     border-top-width: 0;
+    position: relative;
 
     .nav-tabs li a {
       height: 28px;
@@ -100,8 +132,8 @@
     .tab-pane.active {
       @include init-flex-position(column);
       @include flex(1 1);
-      background: #fcfcfc;
-      height: 490px;
+      background: #fff;
+      height: 496px;
     }
   }
 
@@ -154,7 +186,22 @@
   }
 
   .repaired-word-btn {
-    color: #c99700;
+    color: #e59c5b;
+  }
+
+  .pagination-block {
+    @include init-flex-position(row);
+    @include justify-content(center);
+    background: #f6f6f6;
+
+    .pagination-sm {
+      margin: 10px 0;
+    }
+
+    .pagination-page.active a {
+      background: lighten(#467aaa, 10%);
+      border-color: lighten(#467aaa, 4%);
+    }
   }
 }
 
@@ -162,10 +209,16 @@
   @include init-flex-position(column);
   margin-left: 18px;
 
+  .preview-msg {
+    margin: 0 18px;
+    width: 334px;
+  }
+
   .word-translations {
     @include init-flex-position(column);
     background: #fff;
-    height: 240px;
+    height: 280px;
+    position: relative;
     width: 370px;
   }
 
@@ -226,8 +279,9 @@
 
   .word-contexts {
     @include init-flex-position(column);
-    height: 390px;
+    height: 350px;
     margin-top: 16px;
+    position: relative;
     width: 370px;
   }
 
@@ -266,9 +320,10 @@
     @include init-flex-position(row);
     @include align-items(center);
     @include justify-content(center);
-    background: #e2c5ca;
-    border: 1px solid #999;
-    color: #9b3b3b;
+    background: #f2f2f2;
+    border: 1px solid #ccc;
+    border-top-width: 0;
+    color: #bc6d83;
     font-size: 8pt;
     padding: 2px;
   }

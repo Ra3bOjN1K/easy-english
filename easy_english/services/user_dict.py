@@ -116,7 +116,7 @@ class UserDictionary:
                     break
         return word_list
 
-    def get_all_words(self):
+    def get_all_user_words(self):
         from easy_english.models import UserForeignWord
-        words = UserForeignWord.objects.all()
+        words = UserForeignWord.objects.filter(user=self.user).all()
         return len(words), words

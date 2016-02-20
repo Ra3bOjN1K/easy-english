@@ -31,8 +31,22 @@
                                         <div class="word-counter">{{ word.counter }}</div>
                                         <div class="word-name">{{ word.word }}</div>
                                         <a class="learned-word-btn"
+                                           uib-tooltip="Уже знаю"
+                                           tooltip-placement="top"
+                                           tooltip-append-to-body="true"
+                                           tooltip-popup-delay="700"
+                                           tooltip-class="ee-top-tooltip"
                                            ng-click="vm.addWordToLearned(word); $event.stopPropagation();"><i class="fa fa-trash"></i></a>
                                     </div>
+                                </div>
+                                <div class="pagination-block">
+                                    <uib-pagination total-items="vm.pagination.totalNewWords"
+                                                    ng-model="vm.pagination.currentNewWordsPage"
+                                                    max-size="4" class="pagination-sm"
+                                                    boundary-link-numbers="true" rotate="true" next-text="Туда"
+                                                    items-per-page="vm.pagination.wordsPerPage" previous-text="Сюда"
+                                                    ng-change="vm.pagination.onPageChange()">
+                                    </uib-pagination>
                                 </div>
                             </uib-tab>
                             <uib-tab heading="Из словаря" select="vm.tab.onTabSelect(vm.DICT_WORDS_TAB)">
@@ -44,6 +58,15 @@
                                         <div class="word-name">{{ word.word }}</div>
                                     </div>
                                 </div>
+                                <div class="pagination-block">
+                                    <uib-pagination total-items="vm.pagination.totalWordsFromDict"
+                                                    ng-model="vm.pagination.currentWordsFromDictPage"
+                                                    max-size="4" class="pagination-sm"
+                                                    boundary-link-numbers="true" rotate="true" next-text="Туда"
+                                                    items-per-page="vm.pagination.wordsPerPage" previous-text="Сюда"
+                                                    ng-change="vm.pagination.onPageChange()">
+                                    </uib-pagination>
+                                </div>
                             </uib-tab>
                             <uib-tab heading="Замученные" select="vm.tab.onTabSelect(vm.LEARNED_WORDS_TAB)">
                                 <div class="words-wrapper" ng-if="vm.tab.name === vm.LEARNED_WORDS_TAB">
@@ -53,11 +76,32 @@
                                         <div class="word-counter">{{ word.counter }}</div>
                                         <div class="word-name">{{ word.word }}</div>
                                         <a class="repaired-word-btn"
+                                           uib-tooltip="Вернуть на изучение"
+                                           tooltip-placement="top"
+                                           tooltip-append-to-body="true"
+                                           tooltip-popup-delay="700"
+                                           tooltip-class="ee-top-tooltip"
                                            ng-click="vm.delWordFromLearned(word); $event.stopPropagation();"><i class="fa fa-reply"></i></a>
                                     </div>
                                 </div>
+                                <div class="pagination-block">
+                                    <uib-pagination total-items="vm.pagination.totalLearnedWords"
+                                                    ng-model="vm.pagination.currentLearnedWordsPage"
+                                                    max-size="4" class="pagination-sm"
+                                                    boundary-link-numbers="true" rotate="true" next-text="Туда"
+                                                    items-per-page="vm.pagination.wordsPerPage" previous-text="Сюда"
+                                                    ng-change="vm.pagination.onPageChange()">
+                                    </uib-pagination>
+                                </div>
                             </uib-tab>
                         </uib-tabset>
+
+                        <div class="preview-msg" ng-if="vm.words.list.length === 0 && !vm.words.isLoading">
+                            Выберите отрезок фильма для начала анализа.
+                        </div>
+                        <div class="loading" ng-if="vm.words.list.length === 0 && vm.words.isLoading">
+                            <img src="/static/styles/img/loading_clock_transparent.gif">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -71,18 +115,36 @@
                             <div class="word-translation-rate" word-votes-handler ng-cloak="">{{ tr.votes }}</div>
                             <a class="save-btn" ng-if="vm.isUserLoggedIn() && !tr.is_added"
                                ng-click="vm.addUserWord(tr)"
+                               uib-tooltip="В словарь"
+                               tooltip-placement="top"
+                               tooltip-append-to-body="true"
+                               tooltip-popup-delay="700"
+                               tooltip-class="ee-top-tooltip"
                                ng-class="{'hidden': !vm.selectedWordHasCheckedContexts}">
                                 <img src="/static/styles/img/add.png">
                             </a>
                             <a class="save-btn disabled-btn" ng-if="vm.isUserLoggedIn() && tr.is_added"
+                               uib-tooltip="Уже в словаре"
+                               tooltip-placement="top"
+                               tooltip-append-to-body="true"
+                               tooltip-popup-delay="700"
+                               tooltip-class="ee-top-tooltip"
                                ng-class="{'hidden': !vm.selectedWordHasCheckedContexts}">
                                 <img src="/static/styles/img/ok.png">
                             </a>
                         </div>
                     </div>
                     <div class="warning-msg"
-                         ng-if="!vm.selectedWordHasCheckedContexts && vm.words.selectedWordContests.length > 0">
+                         ng-if="!vm.selectedWordHasCheckedContexts && vm.words.selectedWordContests.length > 0 && !vm.words.isTranslationProcess">
                         Выберите контекст, прежде чем добавить слово в словарь!
+                    </div>
+                    <div class="preview-msg"
+                         ng-if="!vm.words.selectedWordTranslation.translations && !vm.words.isTranslationProcess">
+                        Выберите слово из списка для просмотра вариантов его перевода.
+                    </div>
+                    <div class="loading"
+                         ng-if="!vm.words.selectedWordTranslation.translations && vm.words.isTranslationProcess">
+                        <img src="/static/styles/img/loading_clock_transparent.gif">
                     </div>
                 </div>
                 <div class="word-contexts">
@@ -94,6 +156,14 @@
 
                             <div class="word-context-body" ng-bind-html="context.text"></div>
                         </div>
+                    </div>
+                    <div class="preview-msg"
+                         ng-if="vm.words.selectedWordContests.length === 0 && !vm.words.isSearchContextsProcess">
+                        Выберите слово для отображения всех его контекстов.
+                    </div>
+                    <div class="loading"
+                         ng-if="vm.words.selectedWordContests.length === 0 && vm.words.isSearchContextsProcess">
+                        <img src="/static/styles/img/loading_clock_transparent.gif">
                     </div>
                 </div>
             </div>

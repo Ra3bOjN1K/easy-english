@@ -5,8 +5,8 @@ app.controller('ControlPanelCtrl', ['$rootScope', '$scope', function ($rootScope
 }]);
 
 app.controller('AuthorizationCtrl', [
-    '$scope', 'AuthService', 'UserService', 'UserLoginForm', 'UserRegistrationForm',
-    function ($scope, AuthService, UserService, UserLoginForm, UserRegistrationForm) {
+    '$scope', 'AuthService', 'UserService', 'UserLoginForm', 'UserRegistrationForm', 'hotkeys',
+    function ($scope, AuthService, UserService, UserLoginForm, UserRegistrationForm, hotkeys) {
 
         var vm = this;
 
@@ -19,6 +19,10 @@ app.controller('AuthorizationCtrl', [
         vm.login = {};
         vm.reg = {};
         vm.userLogOut = userLogOut;
+
+        vm.isUserLoggedIn = function () {
+            return UserService.hasToken()
+        };
 
         function initLoginForm() {
             return {
@@ -88,20 +92,38 @@ app.controller('AuthorizationCtrl', [
         }
 
         function openPanel() {
-            vm.login = initLoginForm();
-            vm.reg = initRegForm();
-            vm.panel.isOpened = true;
+            if (!vm.isUserLoggedIn() && !vm.panel.isOpened) {
+                vm.login = initLoginForm();
+                vm.reg = initRegForm();
+                vm.panel.isOpened = true;
+                bindCommonHotkeys();
+            }
         }
 
         function closePanel() {
             vm.panel.isOpened = false;
             clearLoginForm();
             clearRegForm();
+            unbindHotkeys();
         }
 
-        vm.isUserLoggedIn = function () {
-            return UserService.hasToken()
-        };
+        function bindCommonHotkeys() {
+            hotkeys.add({
+                combo: 'esc',
+                description: 'Close panel',
+                callback: closePanel
+            });
+        }
+
+        hotkeys.add({
+            combo: 'ctrl+alt+l',
+            description: 'Open authorization panel',
+            callback: openPanel
+        });
+
+        function unbindHotkeys() {
+            hotkeys.del('esc');
+        }
     }]);
 
 app.controller('VideoFilesManageCtrl', [
@@ -111,6 +133,9 @@ app.controller('VideoFilesManageCtrl', [
             isOpened: false,
             open: openPanel,
             close: closePanel,
+            videoFileName: '',
+            engSubTitle: '',
+            rusSubTitle: '',
             engSubDelay: 1,
             rusSubDelay: 1,
             onBtnChangeVideoFileClick: onBtnChangeVideoFileClick,
@@ -120,12 +145,26 @@ app.controller('VideoFilesManageCtrl', [
             onRusSubtitlesChangeDelay: onRusSubtitlesChangeDelay
         };
 
+        $rootScope.$on('ApplicationCtrl:video_file:change', function (event, file) {
+            $scope.panel.videoFileName = file.name;
+        });
+
+        $rootScope.$on('ApplicationCtrl:en_sub:change', function (event, file) {
+            $scope.panel.engSubTitle = file.name;
+        });
+
+        $rootScope.$on('ApplicationCtrl:ru_sub:change', function (event, file) {
+            $scope.panel.rusSubTitle = file.name;
+        });
+
         function openPanel() {
+            bindCommonHotkeys();
             $scope.panel.isOpened = true;
         }
 
         function closePanel() {
             $scope.panel.isOpened = false;
+            unbindHotkeys();
         }
 
         function onBtnChangeVideoFileClick() {
@@ -148,39 +187,44 @@ app.controller('VideoFilesManageCtrl', [
             $rootScope.$broadcast('VideoFilesManageCtrl:rus_sub_delay:changed', $scope.panel.rusSubDelay)
         }
 
-        // HOTKEYS
-        hotkeys.bindTo($scope)
-            .add({
+        function bindCommonHotkeys() {
+            hotkeys.add({
                 combo: 'esc',
                 description: 'Close panel',
                 callback: closePanel
-            })
-            .add({
-                combo: 'ctrl+alt+f',
-                description: 'Open panel',
-                callback: openPanel
-            })
-            .add({
-                combo: 'ctrl+alt+v',
-                description: 'Open video dialog',
-                callback: onBtnChangeVideoFileClick
-            })
-            .add({
-                combo: 'ctrl+alt+e',
-                description: 'Open eng subtitle dialog',
-                callback: onBtnChangeEngSubtitlesClick
-            })
-            .add({
-                combo: 'ctrl+alt+r',
-                description: 'Open rus subtitle dialog',
-                callback: onBtnChangeRusSubtitlesClick
-            })
+            });
+        }
+
+        hotkeys.add({
+            combo: 'ctrl+alt+f',
+            description: 'Open panel',
+            callback: openPanel
+        });
+        hotkeys.add({
+            combo: 'ctrl+alt+v',
+            description: 'Open video dialog',
+            callback: onBtnChangeVideoFileClick
+        });
+        hotkeys.add({
+            combo: 'ctrl+alt+e',
+            description: 'Open eng subtitle dialog',
+            callback: onBtnChangeEngSubtitlesClick
+        });
+        hotkeys.add({
+            combo: 'ctrl+alt+r',
+            description: 'Open rus subtitle dialog',
+            callback: onBtnChangeRusSubtitlesClick
+        });
+
+        function unbindHotkeys() {
+            hotkeys.del('esc');
+        }
 
     }]);
 
 app.controller('UserWordsManagerCtrl', [
-    'UserService', 'UserDictionaryService', '$q', '$timeout', '$scope',
-    function (UserService, UserDictionaryService, $q, $timeout, $scope) {
+    'UserService', 'UserDictionaryService', '$q', '$timeout', '$scope', 'hotkeys',
+    function (UserService, UserDictionaryService, $q, $timeout, $scope, hotkeys) {
         var vm = this;
 
         var DEFAULT_WORDS_PER_PAGE = 15;
@@ -520,21 +564,43 @@ app.controller('UserWordsManagerCtrl', [
         }
 
         function openPanel() {
-            vm.panel.isOpened = true;
+            if (vm.isUserLoggedIn() && !vm.panel.isOpened) {
+                vm.panel.isOpened = true;
+                bindCommonHotkeys();
+            }
         }
 
         function closePanel() {
             vm.panel.isOpened = false;
             clearActualWordData();
             clearLearnedWordData();
+            unbindHotkeys();
+        }
+
+        function bindCommonHotkeys() {
+            hotkeys.add({
+                combo: 'esc',
+                description: 'Close panel',
+                callback: closePanel
+            });
+        }
+
+        hotkeys.add({
+            combo: 'ctrl+alt+d',
+            description: 'Open user dictionary panel',
+            callback: openPanel
+        });
+
+        function unbindHotkeys() {
+            hotkeys.del('esc');
         }
     }]);
 
 app.controller('NewWordsSelectionCtrl', [
-    'UserService', 'SubtitlesContainerService', 'SubtitlesSeparatorService', 'DictionaryService', 'UserDictionaryService',
-    '$timeout', '$sanitize',
-    function (UserService, SubtitlesContainerService, SubtitlesSeparatorService, DictionaryService, UserDictionaryService,
-              $timeout, $sanitize) {
+    '$scope', 'UserService', 'SubtitlesContainerService', 'SubtitlesSeparatorService', 'DictionaryService',
+    'UserDictionaryService', '$timeout', '$sanitize', 'hotkeys',
+    function ($scope, UserService, SubtitlesContainerService, SubtitlesSeparatorService, DictionaryService,
+              UserDictionaryService, $timeout, $sanitize, hotkeys) {
         var vm = this;
 
         vm.panel = {
@@ -563,19 +629,79 @@ app.controller('NewWordsSelectionCtrl', [
 
         vm.words = {
             list: [],
+            isLoading: false,
+            isTranslationProcess: false,
+            isSearchContextsProcess: false,
             selectedWord: {},
             selectedWordContests: [],
             selectedWordTranslation: {},
             onSelectWord: onSelectWord
         };
 
+        vm.pagination = {
+            totalNewWords: 1,
+            totalWordsFromDict: 1,
+            totalLearnedWords: 1,
+            currentNewWordsPage: 1,
+            currentWordsFromDictPage: 1,
+            currentLearnedWordsPage: 1,
+            wordsPerPage: 100,
+            onPageChange: updateTabPageContent
+        };
+
         vm.selectedWordHasCheckedContexts = false;
-        vm.isUserLoggedIn = function () {return UserService.hasToken()};
-        vm.engSubtitlesWasLoaded = function () {return SubtitlesContainerService.isEngSubtitlesSet()};
+        vm.isUserLoggedIn = function () {
+            return UserService.hasToken()
+        };
+        vm.engSubtitlesWasLoaded = function () {
+            return SubtitlesContainerService.isEngSubtitlesSet()
+        };
         vm.addUserWord = addUserWord;
         vm.onContextCheck = onContextCheck;
         vm.addWordToLearned = addWordToLearned;
         vm.delWordFromLearned = delWordFromLearned;
+
+        $scope.$watch(function () {
+            return vm.words.list;
+        }, function () {
+            updateTabPageContent();
+        });
+
+        function updateTabPageContent() {
+            if (angular.equals(vm.tab.name, vm.NEW_WORDS_TAB)) {
+                updateNewWordsTabContent();
+            }
+            else if (angular.equals(vm.tab.name, vm.DICT_WORDS_TAB)) {
+                updateWordsFromDictTabContent();
+            }
+            else if (angular.equals(vm.tab.name, vm.LEARNED_WORDS_TAB)) {
+                updateLearnedWordsTabContent();
+            }
+        }
+
+        function updateNewWordsTabContent() {
+            var words = filterNewWordsOnly(vm.words.list);
+            vm.pagination.totalNewWords = words.length;
+            var startPos = (vm.pagination.currentNewWordsPage - 1) * vm.pagination.wordsPerPage;
+            var endPos = vm.pagination.currentNewWordsPage * vm.pagination.wordsPerPage;
+            vm.tab.newWordList = words.slice(startPos, endPos);
+        }
+
+        function updateWordsFromDictTabContent() {
+            var words = filterWordsFromUserDictOnly(vm.words.list);
+            vm.pagination.totalWordsFromDict = words.length;
+            var startPos = (vm.pagination.currentWordsFromDictPage - 1) * vm.pagination.wordsPerPage;
+            var endPos = vm.pagination.currentWordsFromDictPage * vm.pagination.wordsPerPage;
+            vm.tab.wordsFromDict = words.slice(startPos, endPos);
+        }
+
+        function updateLearnedWordsTabContent() {
+            var words = filterLearnedWordsOnly(vm.words.list);
+            vm.pagination.totalLearnedWords = words.length;
+            var startPos = (vm.pagination.currentLearnedWordsPage - 1) * vm.pagination.wordsPerPage;
+            var endPos = vm.pagination.currentLearnedWordsPage * vm.pagination.wordsPerPage;
+            vm.tab.learnedWords = words.slice(startPos, endPos);
+        }
 
         function onTabSelect(tabName) {
             vm.tab.name = tabName;
@@ -584,25 +710,8 @@ app.controller('NewWordsSelectionCtrl', [
                 vm.words.selectedWord = {};
                 vm.words.selectedWordContests = [];
                 vm.words.selectedWordTranslation = {};
-                initSelectedTab();
+                updateTabPageContent();
             });
-        }
-
-        function initSelectedTab() {
-            if (vm.words.list.length > 0) {
-                if (vm.tab.name === vm.NEW_WORDS_TAB) {
-                    vm.tab.newWordList = filterNewWordsOnly(vm.words.list);
-                }
-                else if (vm.tab.name === vm.DICT_WORDS_TAB) {
-                    vm.tab.wordsFromDict = filterWordsFromUserDictOnly(vm.words.list);
-                }
-                else if (vm.tab.name === vm.LEARNED_WORDS_TAB) {
-                    vm.tab.learnedWords = filterLearnedWordsOnly(vm.words.list);
-                }
-                vm.words.selectedWord = {};
-                vm.words.selectedWordTranslation = {};
-                vm.words.selectedWordContests = [];
-            }
         }
 
         function filterNewWordsOnly(wordList) {
@@ -643,7 +752,7 @@ app.controller('NewWordsSelectionCtrl', [
                         vm.words.list[idx].is_added = true;
                     }
                 });
-                initSelectedTab();
+                updateTabPageContent();
             })
         }
 
@@ -655,7 +764,7 @@ app.controller('NewWordsSelectionCtrl', [
                         vm.words.list[idx].is_added = false;
                     }
                 });
-                initSelectedTab();
+                updateTabPageContent();
             })
         }
 
@@ -666,8 +775,6 @@ app.controller('NewWordsSelectionCtrl', [
         }
 
         function onSelectWord(word) {
-            vm.words.selectedWordContests = [];
-            vm.words.selectedWordTranslation = {};
             vm.selectedWordHasCheckedContexts = false;
             vm.words.selectedWord = word;
             $timeout(function () {
@@ -697,7 +804,7 @@ app.controller('NewWordsSelectionCtrl', [
                         vm.words.list[idx].is_added = true;
                     }
                 });
-                initSelectedTab();
+                updateTabPageContent();
             })
         }
 
@@ -716,33 +823,47 @@ app.controller('NewWordsSelectionCtrl', [
         }
 
         function setContextsForSelectedWord(subtitles, word) {
+            vm.words.isSearchContextsProcess = true;
             vm.words.selectedWordContests = [];
-            angular.forEach(SubtitlesSeparatorService.findContextsForWord(subtitles, word), function (context) {
-                vm.words.selectedWordContests.push({isChecked: false, text: $sanitize(context)});
-            })
+            $timeout(function () {
+                angular.forEach(SubtitlesSeparatorService.findContextsForWord(subtitles, word), function (context) {
+                    vm.words.selectedWordContests.push({isChecked: false, text: $sanitize(context)});
+                })
+            }).then(function () {
+                vm.words.isSearchContextsProcess = false;
+            });
         }
 
         function setTranslationsForSelectedWord(selectedWord) {
+            vm.words.selectedWordTranslation = {};
+            vm.words.isTranslationProcess = true;
             DictionaryService.translate({origText: selectedWord.word}).then(function (translation) {
                 vm.words.selectedWordTranslation = translation;
+                vm.words.isTranslationProcess = false;
             });
         }
 
         function setInitialSubtitlesLimits() {
             var subList = SubtitlesContainerService.getEngSubtitles();
             var firstSubtitle = subList[0];
-            var lastSubtitle = subList[subList.length - 1];
             vm.subtitlesLimit.start = firstSubtitle.start;
-            vm.subtitlesLimit.end = lastSubtitle.end;
+            subList.slice().reverse().some(function (sub) {
+                if (sub.end > 0) {
+                    vm.subtitlesLimit.end = sub.end;
+                    return true;
+                }
+            });
         }
 
         function applySubtitlesLimit() {
+            clearData();
+            vm.words.isLoading = true;
             var limitedSubtitles = SubtitlesContainerService.getSubtitlesLimitedByTime(
                 vm.subtitlesLimit.start, vm.subtitlesLimit.end);
             var wordList = SubtitlesSeparatorService.separateSubtitlesToWords(limitedSubtitles);
             UserDictionaryService.markWordsStatus(wordList).then(function (words) {
                 vm.words.list = words;
-                initSelectedTab();
+                vm.words.isLoading = false;
             });
         }
 
@@ -755,12 +876,38 @@ app.controller('NewWordsSelectionCtrl', [
         }
 
         function openPanel() {
-            vm.panel.isOpened = true;
-            setInitialSubtitlesLimits();
+            if (vm.isUserLoggedIn() && !vm.panel.isOpened && vm.engSubtitlesWasLoaded()) {
+                vm.panel.isOpened = true;
+                setInitialSubtitlesLimits();
+                bindCommonHotkeys();
+            }
         }
 
         function closePanel() {
-            clearData();
-            vm.panel.isOpened = false;
+            $timeout(function () {
+                clearData();
+            });
+            $timeout(function () {
+                vm.panel.isOpened = false;
+                unbindCommonHotkeys();
+            }, 100);
+        }
+
+        function bindCommonHotkeys() {
+            hotkeys.add({
+                combo: 'esc',
+                description: 'Close panel',
+                callback: closePanel
+            });
+        }
+
+        hotkeys.add({
+            combo: 'ctrl+alt+s',
+            description: 'Open panel',
+            callback: openPanel
+        });
+
+        function unbindCommonHotkeys() {
+            hotkeys.del('esc');
         }
     }]);

@@ -24,34 +24,56 @@
     margin: 0 0 24px 0;
   }
 
-  .open-subtitles-button {
-    background: rgba(144, 181, 237, .6);
-    border: 1px solid #aaa;
+  .subtitle-settings-block {
+    @include single-box-shadow(1px, 1px, 4px, .05px, #eee);
+    @include init-flex-position(row);
+    @include align-items(center);
+    @include justify-content(space-between);
+    @include flex-wrap(wrap);
+    background: #fcfcfc;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    padding: 6px 8px;
   }
 
-  .subtitle-settings-block {
-    @include init-flex-position(row);
-    @include justify-content(space-between);
+  .sub-title {
+    @include init-flex-position(column);
     @include align-items(center);
-    margin: 0 0 24px 0;
+    @include flex(1 1);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin: 4px 16px 12px;
+    min-width: 340px;
+    padding: 3px;
+  }
+
+  .open-subtitles-button {
+    @include flex(1 1);
+    background: rgba(144, 181, 237, .6);
+    border: 1px solid #aaa;
   }
 
   .sub-delay {
     @include init-flex-position(row);
     @include align-items(center);
+    margin-left: 12px;
 
     span {
       color: #666;
-      font-size: 13pt;
+      font-size: 11pt;
     }
 
     input {
+      border: 1px solid #ccc;
+      border-radius: 2px;
       color: #666;
       font-size: 12pt;
-      height: 24px;
+      height: 28px;
       margin-left: 6px;
       padding-left: 2px;
-      width: 68px;
+      width: 76px;
     }
   }
 }

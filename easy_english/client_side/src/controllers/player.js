@@ -224,7 +224,10 @@ app.controller('VideoPlayerCtrl', [
                 description: 'Player play/pause',
                 callback: function (event) {
                     PlayerService.getPlayer($scope.player.id).then(function (player) {
-                        player.paused() ? player.play() : player.pause();
+                        var state = player.readyState();
+                        if (state !== 0) {
+                            player.paused() ? player.play() : player.pause();
+                        }
                     });
                     event.preventDefault()
                 }

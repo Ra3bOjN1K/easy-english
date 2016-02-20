@@ -26,9 +26,20 @@
                                  ng-if="vm.actualWords.list && vm.actualWords.isLoaded">
                                 <div class="indicators">
                                     <div class="added-today"
-                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}">N
+                                         ng-class="{'ind-disable': !vm.isWordAddedToday(word)}"
+                                         uib-tooltip="New"
+                                         tooltip-placement="top"
+                                         tooltip-append-to-body="true"
+                                         tooltip-popup-delay="300"
+                                         tooltip-class="ee-top-tooltip">N
                                     </div>
-                                    <div class="exported" ng-class="{'ind-disable': !word.is_exported}">E</div>
+                                    <div class="exported" ng-class="{'ind-disable': !word.is_exported}"
+                                         uib-tooltip="Exported"
+                                         tooltip-placement="top"
+                                         tooltip-append-to-body="true"
+                                         tooltip-popup-delay="300"
+                                         tooltip-class="ee-top-tooltip">E
+                                    </div>
                                 </div>
                                 <div class="word-wrapper">
                                     <input type="checkbox" class="word-checker" title="" ng-model="word.isChecked"
@@ -38,10 +49,20 @@
                                     <div class="translated-word">{{ word.translation }}</div>
                                     <div class="word-control">
                                         <a class="mark-learned-btn"
+                                           uib-tooltip="Отправить в изученные"
+                                           tooltip-placement="top"
+                                           tooltip-append-to-body="true"
+                                           tooltip-popup-delay="700"
+                                           tooltip-class="ee-top-tooltip"
                                            ng-click="vm.actualWords.sendWordToLearned(word.id)">
                                             <img src="/static/styles/img/check-mark.png">
                                         </a>
-                                        <a class="del-btn" ng-click="vm.actualWords.deleteWord(word.id)">
+                                        <a class="del-btn" ng-click="vm.actualWords.deleteWord(word.id)"
+                                            uib-tooltip="Удалить из словаря"
+                                            tooltip-placement="top"
+                                            tooltip-append-to-body="true"
+                                            tooltip-popup-delay="700"
+                                            tooltip-class="ee-top-tooltip">
                                             <img src="/static/styles/img/del.png">
                                         </a>
                                     </div>
@@ -52,15 +73,25 @@
                     <div class="pagination-block">
                         <div class="num-items-per-page">
                             <span>Кол-во строк: </span>
-                            <input type="number" value="{{ vm.actualWords.wordsPerPage }}" min="5" max="100" step="5"
+                            <input type="number" value="{{ vm.actualWords.wordsPerPage }}" min="15" max="100" step="5"
                                    ng-model="vm.actualWords.wordsPerPage" title=""
                                    ng-change="vm.actualWords.changeItemsPerPage()">
                         </div>
                         <div class="export-block">
                             <a class="anki-export" ng-class="{'hidden': !vm.actualWords.hasCheckedActualWords()}"
-                               ng-click="vm.actualWords.exportCheckedToAnki()"><img src="/static/styles/img/anki.png"></a>
+                               ng-click="vm.actualWords.exportCheckedToAnki()"
+                               uib-tooltip="Экспорт в Anki"
+                               tooltip-placement="top"
+                               tooltip-append-to-body="true"
+                               tooltip-popup-delay="700"
+                               tooltip-class="ee-top-tooltip"><img src="/static/styles/img/anki.png"></a>
                             <a class="mark-exported" ng-class="{'hidden': !vm.actualWords.hasCheckedActualWords()}"
-                               ng-click="vm.actualWords.markExportedWords()">E</a>
+                               ng-click="vm.actualWords.markExportedWords()"
+                               uib-tooltip="Отметить выбранные слова как 'exported'"
+                               tooltip-placement="top"
+                               tooltip-append-to-body="true"
+                               tooltip-popup-delay="700"
+                               tooltip-class="ee-top-tooltip">E</a>
                         </div>
                         <uib-pagination total-items="vm.actualWords.totalWords" ng-model="vm.actualWords.currentPage"
                                         max-size="vm.actualWords.maxPageSize" class="pagination-sm"
@@ -100,10 +131,20 @@
                                     <div class="word-control">
                                         <a class="undo-btn"
                                            ng-click="vm.learnedWords.sendWordToActual(word.id)"
-                                           ng-if="word.translation.length > 0">
+                                           ng-if="word.translation.length > 0"
+                                           uib-tooltip="Вернуть на изучение"
+                                           tooltip-placement="top"
+                                           tooltip-append-to-body="true"
+                                           tooltip-popup-delay="700"
+                                           tooltip-class="ee-top-tooltip">
                                             <img src="/static/styles/img/undo.png">
                                         </a>
-                                        <a class="del-btn" ng-click="vm.learnedWords.deleteWord(word.id)">
+                                        <a class="del-btn" ng-click="vm.learnedWords.deleteWord(word.id)"
+                                            uib-tooltip="Удалить из словаря"
+                                            tooltip-placement="top"
+                                            tooltip-append-to-body="true"
+                                            tooltip-popup-delay="700"
+                                            tooltip-class="ee-top-tooltip">
                                             <img src="/static/styles/img/del.png">
                                         </a>
                                     </div>

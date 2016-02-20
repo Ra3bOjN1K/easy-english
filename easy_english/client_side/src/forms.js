@@ -41,6 +41,9 @@ app.factory('UserLoginForm', ['Validators', function (Validators) {
             {
                 type: 'input',
                 key: 'email',
+                ngModelElAttrs: {
+                    tabindex: '1'
+                },
                 templateOptions: {
                     id: 'userEmailId',
                     type: 'email',
@@ -59,6 +62,9 @@ app.factory('UserLoginForm', ['Validators', function (Validators) {
             {
                 type: 'input',
                 key: 'password',
+                ngModelElAttrs: {
+                    tabindex: '2'
+                },
                 templateOptions: {
                     id: 'userPasswordId',
                     type: 'password',
@@ -83,6 +89,9 @@ app.factory('UserRegistrationForm', ['Validators', function (Validators) {
             {
                 type: 'input',
                 key: 'email',
+                ngModelElAttrs: {
+                    tabindex: '1'
+                },
                 templateOptions: {
                     id: 'userEmailId',
                     type: 'email',
@@ -101,6 +110,9 @@ app.factory('UserRegistrationForm', ['Validators', function (Validators) {
             {
                 type: 'input',
                 key: 'password',
+                ngModelElAttrs: {
+                    tabindex: '2'
+                },
                 templateOptions: {
                     id: 'clientPasswordId',
                     type: 'password',
@@ -114,6 +126,9 @@ app.factory('UserRegistrationForm', ['Validators', function (Validators) {
             {
                 type: 'input',
                 key: 'password_confirm',
+                ngModelElAttrs: {
+                    tabindex: '3'
+                },
                 templateOptions: {
                     id: 'clientPasswordConfirmId',
                     type: 'password',

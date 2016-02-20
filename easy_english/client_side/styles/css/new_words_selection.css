@@ -31,6 +31,47 @@
   font-size: 10pt;
   min-height: 20px;
 }
+.slide-panel-data-container .preview-msg {
+  -moz-box-shadow: 0.5px 0.5px 4px 0.05px #eee;
+  -webkit-box-shadow: 0.5px 0.5px 4px 0.05px #eee;
+  box-shadow: 0.5px 0.5px 4px 0.05px #eee;
+  background: #fff;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+  color: #969696;
+  font-size: 11pt;
+  margin: 0 12px;
+  padding: 12px;
+  position: absolute;
+  text-align: center;
+  top: 30%;
+}
+.slide-panel-data-container .loading {
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  display: -ms-flexbox;
+  -ms-flex-direction: row;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-content: center;
+  align-content: center;
+  box-sizing: border-box;
+  position: absolute;
+  text-align: center;
+  top: 36%;
+  width: 100%;
+}
+.slide-panel-data-container .loading img {
+  height: 48px;
+  opacity: .6;
+  width: auto;
+}
 
 .words-selection-box {
   display: -moz-box;
@@ -43,7 +84,7 @@
   -webkit-flex-direction: column;
   display: flex;
   flex-direction: column;
-  height: 640px;
+  height: 646px;
   width: 360px;
 }
 .words-selection-box .subtitles-limiter {
@@ -154,9 +195,10 @@
   flex-direction: column;
   -webkit-flex: 1 1;
   flex: 1 1;
-  background: #ececec;
+  background: #efefef;
   border: 1px solid #ccc;
   border-top-width: 0;
+  position: relative;
 }
 .words-selection-box .words-list-body .nav-tabs li a {
   height: 28px;
@@ -180,8 +222,8 @@
   flex-direction: column;
   -webkit-flex: 1 1;
   flex: 1 1;
-  background: #fcfcfc;
-  height: 490px;
+  background: #fff;
+  height: 496px;
 }
 .words-selection-box .words-wrapper {
   -webkit-flex: 1 1;
@@ -238,7 +280,29 @@
   margin: 0 4px;
 }
 .words-selection-box .repaired-word-btn {
-  color: #c99700;
+  color: #e59c5b;
+}
+.words-selection-box .pagination-block {
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  display: -ms-flexbox;
+  -ms-flex-direction: row;
+  display: -webkit-flex;
+  -webkit-flex-direction: row;
+  display: flex;
+  flex-direction: row;
+  -webkit-justify-content: center;
+  justify-content: center;
+  background: #f6f6f6;
+}
+.words-selection-box .pagination-block .pagination-sm {
+  margin: 10px 0;
+}
+.words-selection-box .pagination-block .pagination-page.active a {
+  background: #6493bf;
+  border-color: #4e84b6;
 }
 
 .word-info-box {
@@ -254,6 +318,10 @@
   flex-direction: column;
   margin-left: 18px;
 }
+.word-info-box .preview-msg {
+  margin: 0 18px;
+  width: 334px;
+}
 .word-info-box .word-translations {
   display: -moz-box;
   -moz-box-orient: vertical;
@@ -266,7 +334,8 @@
   display: flex;
   flex-direction: column;
   background: #fff;
-  height: 240px;
+  height: 280px;
+  position: relative;
   width: 370px;
 }
 .word-info-box .word-translations-wrapper {
@@ -373,8 +442,9 @@
   -webkit-flex-direction: column;
   display: flex;
   flex-direction: column;
-  height: 390px;
+  height: 350px;
   margin-top: 16px;
+  position: relative;
   width: 370px;
 }
 .word-info-box .word-contexts-wrapper {
@@ -440,9 +510,10 @@
   align-items: center;
   -webkit-justify-content: center;
   justify-content: center;
-  background: #e2c5ca;
-  border: 1px solid #999;
-  color: #9b3b3b;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  border-top-width: 0;
+  color: #bc6d83;
   font-size: 8pt;
   padding: 2px;
 }
