@@ -22,7 +22,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 7,
-            'filename': '../logs/easy_english/common.log',
+            'filename': '../logs/common.log',
             'formatter': 'common',
         },
         'file_error': {
@@ -30,7 +30,7 @@ LOGGING = {
             'class': 'logging.handlers.RotatingFileHandler',
             'maxBytes': 1024 * 1024 * 5,
             'backupCount': 7,
-            'filename': '../logs/easy_english/error.log',
+            'filename': '../logs/error.log',
             'formatter': 'common',
         },
     },
