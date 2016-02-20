@@ -127,7 +127,7 @@ app.controller('AuthorizationCtrl', [
     }]);
 
 app.controller('VideoFilesManageCtrl', [
-    '$rootScope', '$scope', '$timeout', 'hotkeys', function ($rootScope, $scope, $timeout, hotkeys) {
+    '$rootScope', '$scope', '$timeout', '$http', 'hotkeys', function ($rootScope, $scope, $timeout, $http, hotkeys) {
 
         $scope.panel = {
             isOpened: false,

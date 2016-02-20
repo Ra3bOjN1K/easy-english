@@ -237,3 +237,12 @@ class UserDictionaryView(ListCreateAPIView):
         words = user_dict.get_actual_words_by_id_list(words_id_list)
         writer.write_user_word_list(words)
         return response
+
+
+def download_anki_backup(request):
+    from django.contrib.staticfiles import finders
+    result = finders.find('resources/anki_backup.apkg')
+    fsock = open(result, 'rb')
+    response = HttpResponse(fsock, content_type='binary/octet-stream')
+    response['Content-Disposition'] = "attachment; filename=backup-0.apkg"
+    return response
