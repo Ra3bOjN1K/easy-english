@@ -27,11 +27,6 @@
 
     <title>Easy English</title>
 
-    {% compress js %}
-        <script type="text/javascript" src="{% static "vendors/js/jquery.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "vendors/js/angular.min.js" %}"></script>
-    {% endcompress %}
-
 </head>
 <body ng-controller="ApplicationCtrl" ng-cloak>
 
@@ -69,6 +64,9 @@
     {% endverbatim %}
 
     {% compress js %}
+        <script type="text/javascript" src="{% static "vendors/js/jquery.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular.min.js" %}"></script>
+
         <script type="text/javascript" src="{% static "vendors/js/jquery-ui.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/moment-with-locales.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/angular-pageslide-directive.min.js" %}"></script>
@@ -85,9 +83,7 @@
         <script type="text/javascript" src="{% static "vendors/js/hotkeys.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/FileSaver.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/video.min.js" %}"></script>
-    {% endcompress %}
 
-    {% compress js %}
         <script type="text/javascript" src="{% static "src/app.js" %}"></script>
         <script type="text/javascript" src="{% static "src/controllers/application.js" %}"></script>
         <script type="text/javascript" src="{% static "src/controllers/control_panel.js" %}"></script>
