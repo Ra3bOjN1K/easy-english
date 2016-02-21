@@ -1,6 +1,7 @@
 Django==1.9.2
 djangorestframework
 django_compressor
+python-memcached
 markdown
 chardet
 requests
