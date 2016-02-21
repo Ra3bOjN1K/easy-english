@@ -1,11 +1,9 @@
 {% load static %}
-{% load pipeline %}
+{% load compress %}
 <!DOCTYPE html>
 <html lang="en" ng-app="EnglishMoviesSchool">
 <head>
     <meta charset="UTF-8">
-
-    {% stylesheet 'styles' %}
 
     <link rel="shortcut icon" href="{% static 'styles/img/favicon.ico' %}" type="image/png"/>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
@@ -14,9 +12,25 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf">
     <link href="http://vjs.zencdn.net/5.0/video-js.min.css" rel="stylesheet">
 
+    {% compress css %}
+        <link href="{% static "vendors/css/bootstrap.min.css" %}" rel="stylesheet">
+        <link href="{% static "vendors/css/hotkeys.min.css" %}" rel="stylesheet">
+        <link href="{% static "vendors/css/jquery-ui.min.css" %}" rel="stylesheet">
+        <link href="{% static "vendors/css/jquery-ui.structure.min.css" %}" rel="stylesheet">
+        <link href="{% static "vendors/css/jquery-ui.theme.min.css" %}" rel="stylesheet">
+        <link href="{% static "styles/css/index.css" %}" rel="stylesheet">
+        <link href="{% static "styles/css/video_files_panel.css" %}" rel="stylesheet">
+        <link href="{% static "styles/css/auth_panel.css" %}" rel="stylesheet">
+        <link href="{% static "styles/css/user_words_manager.css" %}" rel="stylesheet">
+        <link href="{% static "styles/css/new_words_selection.css" %}" rel="stylesheet">
+    {% endcompress %}
+
     <title>Easy English</title>
 
-    {% javascript 'stats' %}
+    {% compress js %}
+        <script type="text/javascript" src="{% static "vendors/js/jquery.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular.min.js" %}"></script>
+    {% endcompress %}
 
 </head>
 <body ng-controller="ApplicationCtrl" ng-cloak>
@@ -53,6 +67,42 @@
         </div>
     </script>
     {% endverbatim %}
+
+    {% compress js %}
+        <script type="text/javascript" src="{% static "vendors/js/jquery-ui.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/moment-with-locales.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular-pageslide-directive.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/ngStorage.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular-animate.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular-messages.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular-sanitize.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/api-check.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/formly.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/angular-formly-templates-bootstrap.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/lodash.compat.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/restangular.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/ui-bootstrap-tpls-0.14.2.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/hotkeys.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/FileSaver.min.js" %}"></script>
+        <script type="text/javascript" src="{% static "vendors/js/video.min.js" %}"></script>
+    {% endcompress %}
+
+    {% compress js %}
+        <script type="text/javascript" src="{% static "src/app.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/controllers/application.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/controllers/control_panel.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/controllers/player.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/directives/player.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/directives/control_panel.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/models/player.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/services/subtitles_handler.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/services/dictionary_serv.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/services/translator_dialog_serv.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/services/auth.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/services/user_dict.js" %}"></script>
+        <script type="text/javascript" src="{% static "src/forms.js" %}"></script>
+    {% endcompress %}
+
 </div>
 </body>
 </html>

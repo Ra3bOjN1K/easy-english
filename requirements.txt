@@ -1,6 +1,6 @@
 Django==1.9.2
 djangorestframework
-django-pipeline
+django_compressor
 markdown
 chardet
 requests
