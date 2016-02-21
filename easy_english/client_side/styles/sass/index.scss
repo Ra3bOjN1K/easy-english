@@ -205,7 +205,7 @@ body {
   @include init-flex-position(column);
   @include justify-content(flex-end);
   @include single-box-shadow(2px, 2px, 15px, .2px, #111);
-  background: url('/static/styles/img/english_wallpaper.png') no-repeat center;
+  background: url('/static/styles/img/english_wallpaper.jpg') no-repeat center;
   background-size: cover;
 }
 
