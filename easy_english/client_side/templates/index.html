@@ -83,7 +83,9 @@
         <script type="text/javascript" src="{% static "vendors/js/hotkeys.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/FileSaver.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/video.min.js" %}"></script>
+    {% endcompress %}
 
+    {% compress js %}
         <script type="text/javascript" src="{% static "src/app.js" %}"></script>
         <script type="text/javascript" src="{% static "src/controllers/application.js" %}"></script>
         <script type="text/javascript" src="{% static "src/controllers/control_panel.js" %}"></script>
