@@ -27,6 +27,9 @@
 
     <title>Easy English</title>
 
+    <script type="text/javascript" src="{% static "vendors/js/jquery.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "vendors/js/angular.min.js" %}"></script>
+
 </head>
 <body ng-controller="ApplicationCtrl" ng-cloak>
 
@@ -64,9 +67,6 @@
     {% endverbatim %}
 
     {% compress js %}
-        <script type="text/javascript" src="{% static "vendors/js/jquery.min.js" %}"></script>
-        <script type="text/javascript" src="{% static "vendors/js/angular.min.js" %}"></script>
-
         <script type="text/javascript" src="{% static "vendors/js/jquery-ui.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/moment-with-locales.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/angular-pageslide-directive.min.js" %}"></script>
