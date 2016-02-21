@@ -1,7 +1,8 @@
 Django==1.9.2
 djangorestframework
 django_compressor
-python-memcached
+pylibmc
+django-pylibmc
 markdown
 chardet
 requests
