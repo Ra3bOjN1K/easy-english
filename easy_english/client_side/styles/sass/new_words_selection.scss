@@ -2,6 +2,7 @@
 
 .slide-panel-data-container {
   @include init-flex-position(row);
+  @include flex(1 1);
 
   .container-header {
     @include init-flex-position(row);

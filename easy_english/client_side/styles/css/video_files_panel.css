@@ -9,6 +9,8 @@
   -webkit-flex-direction: column;
   display: flex;
   flex-direction: column;
+  -webkit-flex: 1 1;
+  flex: 1 1;
   padding-top: 24px;
   z-index: 3;
 }

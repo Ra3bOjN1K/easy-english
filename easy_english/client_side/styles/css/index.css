@@ -243,6 +243,16 @@ body:after {
 }
 
 .slide-panel-data-container {
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  display: -ms-flexbox;
+  -ms-flex-direction: column;
+  display: -webkit-flex;
+  -webkit-flex-direction: column;
+  display: flex;
+  flex-direction: column;
   margin: 32px 16px;
 }
 

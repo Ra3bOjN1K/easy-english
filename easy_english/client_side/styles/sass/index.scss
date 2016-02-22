@@ -175,6 +175,7 @@ body {
 }
 
 .slide-panel-data-container {
+  @include init-flex-position(column);
   margin: 32px 16px;
 }
 

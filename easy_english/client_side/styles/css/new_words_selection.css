@@ -9,6 +9,8 @@
   -webkit-flex-direction: row;
   display: flex;
   flex-direction: row;
+  -webkit-flex: 1 1;
+  flex: 1 1;
 }
 .slide-panel-data-container .container-header {
   display: -moz-box;

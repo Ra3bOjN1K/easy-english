@@ -1,6 +1,7 @@
 @import 'settings';
 
 .user-words-block {
+  @include flex(1 1);
 
   li>a {
     border-bottom-color: #ccc;

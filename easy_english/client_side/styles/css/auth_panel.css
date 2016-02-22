@@ -1,3 +1,7 @@
+.auth-block {
+  -webkit-flex: 1 1;
+  flex: 1 1;
+}
 .auth-block .tab-content {
   background: #fff;
   border: 1px solid #ccc;

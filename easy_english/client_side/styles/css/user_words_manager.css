@@ -1,3 +1,7 @@
+.user-words-block {
+  -webkit-flex: 1 1;
+  flex: 1 1;
+}
 .user-words-block li > a {
   border-bottom-color: #ccc;
 }
