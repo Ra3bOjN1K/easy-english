@@ -190,6 +190,12 @@ app.directive('subtitlesWrapperManager', [
                             }
                         });
 
+                        scope.$watch('subtitles.engCurrentQuote', function (newValue) {
+                            if (newValue === null) {
+                                TranslatorDialog.close();
+                            }
+                        });
+
                         scope.$watch('subtitles.engCurrentItem', function () {
                             var words = engSubField.find('.wrd');
                             words.on('click', function (event) {
