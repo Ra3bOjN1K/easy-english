@@ -125,7 +125,7 @@ app.directive('wordVotesHandler', ['$timeout', function ($timeout) {
 }]);
 
 app.directive('subtitlesWrapperManager', [
-    '$document', '$rootScope', '$compile', function ($document, $rootScope, $compile) {
+    '$document', '$rootScope', '$compile', 'TranslatorDialog', function ($document, $rootScope, $compile, TranslatorDialog) {
         return {
             link: function (scope, element, attrs, ctrl) {
 
@@ -179,13 +179,24 @@ app.directive('subtitlesWrapperManager', [
                                 }
                             }
                         });
+                        vjsTech.on('click', function () {
+                            if (actionFlag === 0 && TranslatorDialog.isVisible()) {
+                                TranslatorDialog.close();
+                            }
+                        });
+                        subtitlesWrapper.on('click', function () {
+                            if (actionFlag === 0 && TranslatorDialog.isVisible()) {
+                                TranslatorDialog.close();
+                            }
+                        });
 
                         scope.$watch('subtitles.engCurrentItem', function () {
                             var words = engSubField.find('.wrd');
-                            words.on('click', function () {
+                            words.on('click', function (event) {
                                 if (!engSubField.hasClass('hide')) {
                                     $rootScope.$broadcast('subtitlesWrapperManager:on_translate', $(this).text())
                                 }
+                                event.stopPropagation();
                             });
                         }, true);
 
