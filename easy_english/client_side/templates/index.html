@@ -66,6 +66,10 @@
     </script>
     {% endverbatim %}
 
+    <script>
+        screen.orientation.lock('landscape');
+    </script>
+
     {% compress js %}
         <script type="text/javascript" src="{% static "vendors/js/jquery-ui.min.js" %}"></script>
         <script type="text/javascript" src="{% static "vendors/js/moment-with-locales.min.js" %}"></script>
