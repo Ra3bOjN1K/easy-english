@@ -192,7 +192,7 @@ app.directive('subtitlesWrapperManager', [
 
                         scope.$watch('subtitles.engCurrentQuote', function (newValue) {
                             if (newValue === null) {
-                                TranslatorDialog.close();
+                                TranslatorDialog.close(false);
                             }
                         });
 

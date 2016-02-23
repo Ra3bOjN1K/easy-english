@@ -16,15 +16,19 @@ app.factory('TranslatorDialog', ['$rootScope', 'DictionaryService', function ($r
     }
 
     return {
-        show: function () {
+        show: function (forceApply) {
             _clear();
             _isVisible = true;
-            $rootScope.$apply();
+            if (forceApply || forceApply === undefined) {
+                $rootScope.$apply();
+            }
         },
-        close: function () {
+        close: function (forceApply) {
             _clear();
             _isVisible = false;
-            $rootScope.$apply();
+            if (forceApply || forceApply === undefined) {
+                $rootScope.$apply();
+            }
         },
         isVisible: function () {
             return _isVisible;
