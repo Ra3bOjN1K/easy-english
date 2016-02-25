@@ -37,19 +37,6 @@ class WordAssociationPicture(models.Model):
         db_table = 'ee_word_picture_association'
 
 
-class WordPronunciation(models.Model):
-    name = models.CharField(max_length=240)
-    foreign_word = models.ForeignKey(ForeignWord,
-                                     related_name='pronunciations',
-                                     null=True, blank=True)
-    user_foreign_word = models.ForeignKey(UserForeignWord,
-                                          related_name='pron_ufw',
-                                          null=True, blank=True)
-
-    class Meta:
-        db_table = 'ee_word_pronunciation'
-
-
 class UserForeignWord(models.Model):
     user = models.ForeignKey(User, related_name='foreign_words')
     foreign_word = models.CharField(max_length=240)
@@ -61,6 +48,19 @@ class UserForeignWord(models.Model):
     class Meta:
         db_table = 'ee_user_foreign_word'
         unique_together = ('user', 'foreign_word', 'translation')
+
+
+class WordPronunciation(models.Model):
+    name = models.CharField(max_length=240)
+    foreign_word = models.ForeignKey(ForeignWord,
+                                     related_name='pronunciations',
+                                     null=True, blank=True)
+    user_foreign_word = models.ForeignKey(UserForeignWord,
+                                          related_name='pron_ufw',
+                                          null=True, blank=True)
+
+    class Meta:
+        db_table = 'ee_word_pronunciation'
 
 
 class UserWordContext(models.Model):
