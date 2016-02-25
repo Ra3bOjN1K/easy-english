@@ -49,6 +49,10 @@ class UserForeignWord(models.Model):
         db_table = 'ee_user_foreign_word'
         unique_together = ('user', 'foreign_word', 'translation')
 
+    def gen_pronunciation_name(self):
+        from _md5 import md5
+        return md5(self.foreign_word)
+
 
 class WordPronunciation(models.Model):
     name = models.CharField(max_length=240)
@@ -56,7 +60,7 @@ class WordPronunciation(models.Model):
                                      related_name='pronunciations',
                                      null=True, blank=True)
     user_foreign_word = models.ForeignKey(UserForeignWord,
-                                          related_name='pron_ufw',
+                                          related_name='ufw_prons',
                                           null=True, blank=True)
 
     class Meta:

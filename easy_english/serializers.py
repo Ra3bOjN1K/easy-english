@@ -4,8 +4,7 @@ from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-
-from easy_english.models import UserForeignWord
+from easy_english.services.tts import PronunciationLoader
 
 
 class AuthTokenSerializer(serializers.Serializer):
@@ -122,6 +121,7 @@ class UserForeignWordSerializer(serializers.Serializer):
     is_learned = serializers.BooleanField(default=False)
 
     def to_internal_value(self, data):
+        from easy_english.models import UserForeignWord
         if isinstance(data, UserForeignWord):
             return {
                 'id': data.id,
@@ -134,10 +134,12 @@ class UserForeignWordSerializer(serializers.Serializer):
                 'is_learned': data.is_learned
             }
         else:
-            return super(UserForeignWordSerializer, self).to_internal_value(data)
+            return super(UserForeignWordSerializer, self).to_internal_value(
+                data)
 
     def create(self, validated_data):
-        from easy_english.models import UserForeignWord, UserWordContext
+        from easy_english.models import (UserForeignWord, UserWordContext,
+            WordPronunciation)
         foreign_word = UserForeignWord()
         foreign_word.user = validated_data['user']
         foreign_word.foreign_word = validated_data['foreign_word']
@@ -146,6 +148,14 @@ class UserForeignWordSerializer(serializers.Serializer):
         for c in validated_data['contexts']:
             context = UserWordContext(context=c, user_word=foreign_word)
             context.save()
+        pron_loader = PronunciationLoader()
+        pron_full_name = pron_loader.download_pronunciation(
+            foreign_word.foreign_word,
+            foreign_word.gen_pronunciation_name()
+        )
+        pron = WordPronunciation(name=pron_full_name)
+        pron.user_foreign_word = foreign_word
+        pron.save()
         return foreign_word
 
 

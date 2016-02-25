@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import errno
 import os
+from gtts import gTTS
 
 from app import settings
 
@@ -19,5 +20,18 @@ class PronunciationLoader:
                 if exc.errno != errno.EEXIST:
                     raise
 
-    # def download_pronunciation(self, word, file_name):
-    #     tts = gTTS()
+    def download_pronunciation(self, word, file_name):
+        file_path = self._file_full_path(file_name)
+        if not self.file_exists(file_name):
+            tts = gTTS(text=word, lang='en')
+            f = open(file_path, 'wb')
+            tts.write_to_fp(f)
+            f.close()
+        return file_path
+
+    def _file_full_path(self, file_name):
+        file_name = file_name if file_name.endswith('.mp3') else file_name + '.mp3'
+        return os.path.join(self.pronunciations_dir, file_name)
+
+    def file_exists(self, file_name):
+        return os.path.isfile(self._file_full_path(file_name))
