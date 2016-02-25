@@ -50,8 +50,8 @@ class UserForeignWord(models.Model):
         unique_together = ('user', 'foreign_word', 'translation')
 
     def gen_pronunciation_name(self):
-        from _md5 import md5
-        return md5(self.foreign_word)
+        import hashlib
+        return hashlib.md5(self.foreign_word.encode('utf-8')).hexdigest()
 
 
 class WordPronunciation(models.Model):

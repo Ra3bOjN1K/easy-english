@@ -153,9 +153,10 @@ class UserForeignWordSerializer(serializers.Serializer):
             foreign_word.foreign_word,
             foreign_word.gen_pronunciation_name()
         )
-        pron = WordPronunciation(name=pron_full_name)
-        pron.user_foreign_word = foreign_word
-        pron.save()
+        WordPronunciation(
+            name=pron_full_name,
+            user_foreign_word=foreign_word
+        ).save()
         return foreign_word
 
 

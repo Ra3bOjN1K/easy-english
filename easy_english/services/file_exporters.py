@@ -3,12 +3,15 @@ import csv
 
 from csv import DictWriter
 
+from app import settings
+
 ANKI_DIALECT = 'anki'
 
 csv.register_dialect(ANKI_DIALECT, delimiter=';')
 
 
 class UserWordsToCsvFileWriter(DictWriter):
+    HOST_NAME = settings.SERVER_NAME
     FIELD_ID = 'id'
     FIELD_IN_ENGLISH = 'in_english'
     FIELD_IN_RUSSIAN = 'in_russian'
@@ -30,6 +33,11 @@ class UserWordsToCsvFileWriter(DictWriter):
         self.writerow(self._user_word_to_dict(word))
 
     def _user_word_to_dict(self, word):
+        pron = word.ufw_prons.first()
+        pron_path = ''
+        if pron:
+            pron_path = '%s%s' % (self.HOST_NAME, pron.name)
+
         return {
             self.FIELD_ID: '{0}_{1}'.format(
                 word.created.strftime('%d%m%y%H%M%S'), word.id),
@@ -39,7 +47,7 @@ class UserWordsToCsvFileWriter(DictWriter):
                 ['<div class="context">%s</div>' % c.context for c in
                  word.contexts.all()[:3]]),
             self.FIELD_PIC: '',
-            self.FIELD_SOUND: '',
+            self.FIELD_SOUND: pron_path,
             self.FIELD_HAS_REVERSE_SIDE: '*' if len(
                 word.foreign_word.split(' ')) < 4 else ''
         }

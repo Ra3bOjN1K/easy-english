@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import errno
 import os
+import re
 from gtts import gTTS
 
 from app import settings
@@ -13,9 +14,9 @@ class PronunciationLoader:
         self.create_upload_dir_if_not_exists()
 
     def create_upload_dir_if_not_exists(self):
-        if not os.path.exists(os.path.dirname(self.pronunciations_dir)):
+        if not os.path.exists(self.pronunciations_dir):
             try:
-                os.makedirs(os.path.dirname(self.pronunciations_dir))
+                os.makedirs(self.pronunciations_dir)
             except OSError as exc:
                 if exc.errno != errno.EEXIST:
                     raise
@@ -24,10 +25,14 @@ class PronunciationLoader:
         file_path = self._file_full_path(file_name)
         if not self.file_exists(file_name):
             tts = gTTS(text=word, lang='en')
-            f = open(file_path, 'wb')
+            f = open(file_path, 'wb+')
             tts.write_to_fp(f)
             f.close()
-        return file_path
+        m = re.search('/.+(/media/.+)', file_path)
+        url_path = ''
+        if m:
+            url_path = m.group(1)
+        return url_path
 
     def _file_full_path(self, file_name):
         file_name = file_name if file_name.endswith('.mp3') else file_name + '.mp3'
