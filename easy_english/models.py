@@ -40,7 +40,11 @@ class WordAssociationPicture(models.Model):
 class WordPronunciation(models.Model):
     name = models.CharField(max_length=240)
     foreign_word = models.ForeignKey(ForeignWord,
-                                     related_name='pronunciations')
+                                     related_name='pronunciations',
+                                     null=True, blank=True)
+    user_foreign_word = models.ForeignKey(UserForeignWord,
+                                          related_name='pron_ufw',
+                                          null=True, blank=True)
 
     class Meta:
         db_table = 'ee_word_pronunciation'
