@@ -47,7 +47,7 @@ class UserWordsToCsvFileWriter(DictWriter):
                 ['<div class="context">%s</div>' % c.context for c in
                  word.contexts.all()[:3]]),
             self.FIELD_PIC: '',
-            self.FIELD_SOUND: '[sound:%s]' % pron_path,
+            self.FIELD_SOUND: '[sound:%s]' % pron_path if pron_path else '',
             self.FIELD_HAS_REVERSE_SIDE: '*' if len(
                 word.foreign_word.split(' ')) < 4 else ''
         }

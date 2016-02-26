@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import threading
+
 import random
 from django.contrib.auth import authenticate
 from django.utils.translation import ugettext_lazy as _
@@ -138,8 +140,7 @@ class UserForeignWordSerializer(serializers.Serializer):
                 data)
 
     def create(self, validated_data):
-        from easy_english.models import (UserForeignWord, UserWordContext,
-            WordPronunciation)
+        from easy_english.models import (UserForeignWord, UserWordContext)
         foreign_word = UserForeignWord()
         foreign_word.user = validated_data['user']
         foreign_word.foreign_word = validated_data['foreign_word']
@@ -148,6 +149,17 @@ class UserForeignWordSerializer(serializers.Serializer):
         for c in validated_data['contexts']:
             context = UserWordContext(context=c, user_word=foreign_word)
             context.save()
+
+        threading.Thread(
+            target=self.download_pronunciation,
+            args=(foreign_word,)
+        ).start()
+
+        return foreign_word
+
+    def download_pronunciation(self, foreign_word):
+        from easy_english.models import WordPronunciation
+
         pron_loader = PronunciationLoader()
         pron_full_name = pron_loader.download_pronunciation(
             foreign_word.foreign_word,
@@ -157,7 +169,6 @@ class UserForeignWordSerializer(serializers.Serializer):
             name=pron_full_name,
             user_foreign_word=foreign_word
         ).save()
-        return foreign_word
 
 
 class UserForeignWordListSerializer(serializers.Serializer):
