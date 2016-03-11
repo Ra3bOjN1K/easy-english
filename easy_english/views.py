@@ -96,7 +96,10 @@ class SubtitleListView(ListCreateAPIView):
                 )
             except Exception as ex:
                 logger.exception(ex)
-                return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+                return Response(
+                    status=status.HTTP_406_NOT_ACCEPTABLE,
+                    data={'message': ex.args[0]}
+                )
         else:
             logger.error(
                 'Subtitles were not handled. Must be file format is not supported.')
