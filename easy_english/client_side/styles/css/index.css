@@ -402,9 +402,10 @@ body:after {
   flex-direction: row;
   -webkit-justify-content: center;
   justify-content: center;
-  background: rgba(34, 34, 34, 0.3);
+  text-shadow: 2px 2px 4px #222;
+  background: rgba(34, 34, 34, 0.2);
   border-radius: 4px;
-  font-size: 16pt;
+  font-size: 18pt;
   margin: 4px 0;
   min-height: 60px;
   padding: 8px;
@@ -423,9 +424,12 @@ body:after {
   -ms-user-select: text;
   -webkit-user-select: text;
   user-select: text;
-  font-size: 22pt;
+  font-size: 29pt;
   margin-top: 0;
-  min-height: 80px;
+  min-height: 100px;
+}
+.video-js .subtitles-wrapper-block .word-container {
+  padding: 0 20px;
 }
 .video-js .subtitles-wrapper-block .word-container::selection {
   background: transparent;
@@ -609,7 +613,7 @@ body:after {
   font-style: italic;
   margin: 0 10px;
   text-align: right;
-  width: 46px;
+  width: 52px;
 }
 .translated-word-item .save-btn {
   -moz-box-shadow: 0.5px 0.5px 2px 0.1px #999;

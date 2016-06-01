@@ -281,10 +281,11 @@ body {
     @include init-flex-position(row);
     //@include align-content(center);
     @include justify-content(center);
-    background: rgba(34, 34, 34, .3);
+    @include single-text-shadow(2px, 2px, 4px, $color: #222);
+    background: rgba(34, 34, 34, .2);
     //border: 1px solid rgba(56, 56, 56, .5);
     border-radius: 4px;
-    font-size: 16pt;
+    font-size: 18pt;
     margin: 4px 0;
     min-height: 60px;
     padding: 8px;
@@ -303,9 +304,9 @@ body {
 
   .eng-subtitle-field {
     @include user-select(text);
-    font-size: 22pt;
+    font-size: 29pt;
     margin-top: 0;
-    min-height: 80px;
+    min-height: 100px;
   }
 
   .word-container {
@@ -314,6 +315,8 @@ body {
       background: transparent;
       color: #c95452;
     }
+
+    padding: 0 20px;
   }
 
   span.wrd {
@@ -430,7 +433,7 @@ body {
     font-style: italic;
     margin: 0 10px;
     text-align: right;
-    width: 46px;
+    width: 52px;
   }
 
   .save-btn {

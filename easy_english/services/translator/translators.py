@@ -33,7 +33,7 @@ class LinguaLeoTranslator:
         )
 
     def translate(self, word):
-        resp = requests.get(self.TRANSLATES_API_URL, {'word': word})
+        resp = requests.get(self.TRANSLATES_API_URL, params={'word': word})
         if resp.ok:
             content = resp.content.decode(self.ENCODING)
             return self._convert_to_result(content, word)

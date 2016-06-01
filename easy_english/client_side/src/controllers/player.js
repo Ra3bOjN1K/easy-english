@@ -125,6 +125,9 @@ app.controller('VideoPlayerCtrl', [
                         player.currentTime(),
                         true
                     ).then(function (subItem) {
+                        
+                        numSubtitles = (player.currentTime() - subItem.start) < 0.30 ? -1 : numSubtitles;
+                        
                         if (numSubtitles !== 0) {
                             var subItemId = !!subItem ? subItem.id : -1;
                             SubtitlesParserService.findSubtitleById($scope.subtitles.engList, subItemId + numSubtitles).then(function (targetSub) {
@@ -264,30 +267,6 @@ app.controller('VideoPlayerCtrl', [
             })
             .add({
                 combo: 'ctrl+left',
-                description: 'prev subtitle',
-                callback: function (event) {
-                    setVideoSubtitleStartTimeFromCurrentTime();
-                    event.preventDefault()
-                }
-            })
-            .add({
-                combo: 'ctrl+shift+left',
-                description: 'prev_x2 subtitle',
-                callback: function (event) {
-                    setVideoSubtitleStartTimeFromCurrentTime(-1);
-                    event.preventDefault()
-                }
-            })
-            .add({
-                combo: 'ctrl+right',
-                description: 'next subtitle',
-                callback: function (event) {
-                    setVideoSubtitleStartTimeFromCurrentTime(1);
-                    event.preventDefault()
-                }
-            })
-            .add({
-                combo: 'left',
                 description: '5sec prev',
                 callback: function (event) {
                     playerRewindSec(-5);
@@ -295,10 +274,34 @@ app.controller('VideoPlayerCtrl', [
                 }
             })
             .add({
-                combo: 'right',
+                combo: 'ctrl+right',
                 description: '5sec forw',
                 callback: function (event) {
                     playerRewindSec(5);
+                    event.preventDefault()
+                }
+            })
+            // .add({
+            //     combo: 'ctrl+shift+left',
+            //     description: 'prev_x2 subtitle',
+            //     callback: function (event) {
+            //         setVideoSubtitleStartTimeFromCurrentTime(-1);
+            //         event.preventDefault()
+            //     }
+            // })
+            .add({
+                combo: 'left',
+                description: 'prev subtitle',
+                callback: function (event) {
+                    setVideoSubtitleStartTimeFromCurrentTime();
+                    event.preventDefault()
+                }
+            })
+            .add({
+                combo: 'right',
+                description: 'next subtitle',
+                callback: function (event) {
+                    setVideoSubtitleStartTimeFromCurrentTime(1);
                     event.preventDefault()
                 }
             })

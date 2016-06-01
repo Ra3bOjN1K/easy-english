@@ -125,7 +125,8 @@ app.directive('wordVotesHandler', ['$timeout', function ($timeout) {
 }]);
 
 app.directive('subtitlesWrapperManager', [
-    '$document', '$rootScope', '$compile', 'TranslatorDialog', function ($document, $rootScope, $compile, TranslatorDialog) {
+    '$timeout', '$document', '$rootScope', '$compile', 'TranslatorDialog',
+    function ($timeout, $document, $rootScope, $compile, TranslatorDialog) {
         return {
             link: function (scope, element, attrs, ctrl) {
 
@@ -166,26 +167,27 @@ app.directive('subtitlesWrapperManager', [
 
                         var actionFlag = 0;
                         engSubField.on('mousedown', function () {
-                            actionFlag = 0;
-                        });
-                        engSubField.on('mousemove', function () {
                             actionFlag = 1;
                         });
+                        // engSubField.on('mousemove', function () {
+                        //     actionFlag = 1;
+                        // });
                         engSubField.on('mouseup', function () {
                             if (actionFlag === 1 && !engSubField.hasClass('hide')) {
                                 var sourceText = window.getSelection().toString().replace(/[\r\n]+/g, ' ').trim();
                                 if (sourceText.length > 0) {
-                                    $rootScope.$broadcast('subtitlesWrapperManager:on_translate', sourceText)
+                                    $rootScope.$broadcast('subtitlesWrapperManager:on_translate', sourceText);
                                 }
+                                actionFlag = 2;
                             }
                         });
                         vjsTech.on('click', function () {
-                            if (actionFlag === 0 && TranslatorDialog.isVisible()) {
+                            if (actionFlag === 1 && TranslatorDialog.isVisible()) {
                                 TranslatorDialog.close();
                             }
                         });
                         subtitlesWrapper.on('click', function () {
-                            if (actionFlag === 0 && TranslatorDialog.isVisible()) {
+                            if (actionFlag === 1 && TranslatorDialog.isVisible()) {
                                 TranslatorDialog.close();
                             }
                         });
@@ -195,16 +197,43 @@ app.directive('subtitlesWrapperManager', [
                                 TranslatorDialog.close(false);
                             }
                         });
+                        
+                        var close_translate_dlg_promise = null;
 
                         scope.$watch('subtitles.engCurrentItem', function () {
                             var words = engSubField.find('.wrd');
-                            words.on('click', function (event) {
-                                if (!engSubField.hasClass('hide')) {
-                                    $rootScope.$broadcast('subtitlesWrapperManager:on_translate', $(this).text())
-                                }
+                            var over_promise = null;
+                            words.on('mouseover', function (event) {
+                                var text = $(this).text();
+                                $timeout.cancel(close_translate_dlg_promise);
+                                over_promise = $timeout(function () {
+                                    if (!engSubField.hasClass('hide')) {
+                                        $rootScope.$broadcast('subtitlesWrapperManager:on_translate', text);
+                                        if (actionFlag === 2) {
+                                            window.getSelection().empty();
+                                        }
+                                    }
+                                }, 200);
                                 event.stopPropagation();
                             });
+                            words.on('mouseleave', function () {
+                                $timeout.cancel(over_promise);
+                            });
+
+                            var word_container = engSubField.find('.word-container');
+                            word_container.on('mouseleave', function () {
+                                close_translate_dlg_promise = $timeout(function () {
+                                    TranslatorDialog.close();
+                                    window.getSelection().empty();
+                                }, 1000);
+                            });
+
                         }, true);
+                        
+                        var translated_dlg = $(element).find('.translated-word-dlg');
+                        translated_dlg.on('mouseover', function (event) {
+                            $timeout.cancel(close_translate_dlg_promise);
+                        })
 
                     }
                     if (!rusSubField.length) {
